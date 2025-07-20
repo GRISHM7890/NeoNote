@@ -50,15 +50,16 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <Link href={item.href} legacyBehavior passHref>
-                    <SidebarMenuButton
-                      isActive={pathname === item.href}
-                      tooltip={{ children: item.label }}
-                    >
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    tooltip={{ children: item.label }}
+                  >
+                    <Link href={item.href}>
                       <item.icon className="size-4" />
                       <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </Link>
+                    </Link>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
 
@@ -77,12 +78,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     <SidebarMenuSub>
                       {calculators.map((item) => (
                          <SidebarMenuSubItem key={item.href}>
-                            <Link href={item.href} legacyBehavior passHref>
-                                <SidebarMenuSubButton isActive={pathname === item.href}>
+                            <SidebarMenuSubButton asChild isActive={pathname === item.href}>
+                                <Link href={item.href}>
                                     <item.icon />
                                     <span>{item.label}</span>
-                                </SidebarMenuSubButton>
-                            </Link>
+                                </Link>
+                            </SidebarMenuSubButton>
                          </SidebarMenuSubItem>
                       ))}
                     </SidebarMenuSub>

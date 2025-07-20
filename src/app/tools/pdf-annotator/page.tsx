@@ -116,7 +116,11 @@ export default function PdfAnnotatorPage() {
                         >
                             <Page pageNumber={currentPage} width={width} loading=""/>
                         </Document>
-                    ) : null}
+                    ) : (
+                      <div className="flex justify-center items-center h-full">
+                        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                      </div>
+                    )}
                   </div>
                   {numPages > 1 && (
                      <div className="flex justify-between items-center">

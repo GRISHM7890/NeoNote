@@ -17,21 +17,21 @@ import { z } from 'genkit';
 
 // 1. Define Input/Output Schemas
 
-export const GenerateBattleQuestionsInputSchema = z.object({
+const GenerateBattleQuestionsInputSchema = z.object({
   notes: z.string().optional().describe('The user-provided notes or text to base the questions on.'),
   topic: z.string().optional().describe('A topic to generate questions about if no notes are provided.'),
   questionCount: z.number().int().min(1).max(20).describe('The number of questions to generate.'),
 });
 export type GenerateBattleQuestionsInput = z.infer<typeof GenerateBattleQuestionsInputSchema>;
 
-export const BattleQuestionSchema = z.object({
+const BattleQuestionSchema = z.object({
   question: z.string().describe("The quiz question, derived from a key concept in the notes."),
   options: z.array(z.string()).length(4).describe("An array of 4 plausible options. One must be the correct answer."),
   correctAnswer: z.string().describe("The correct answer from the options."),
 });
 export type BattleQuestion = z.infer<typeof BattleQuestionSchema>;
 
-export const GenerateBattleQuestionsOutputSchema = z.object({
+const GenerateBattleQuestionsOutputSchema = z.object({
   questions: z.array(BattleQuestionSchema).describe('An array of generated battle questions.'),
 });
 export type GenerateBattleQuestionsOutput = z.infer<typeof GenerateBattleQuestionsOutputSchema>;

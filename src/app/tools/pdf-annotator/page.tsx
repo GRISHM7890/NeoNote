@@ -114,7 +114,7 @@ export default function PdfAnnotatorPage() {
                             loading={<div className="flex justify-center items-center h-full"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>}
                             onLoadError={(error) => toast({title: 'Error loading PDF', description: error.message, variant: 'destructive'})}
                         >
-                            <Page pageNumber={currentPage} width={width} loading=""/>
+                            <Page pageNumber={currentPage} width={width} />
                         </Document>
                     ) : (
                       <div className="flex justify-center items-center h-full">

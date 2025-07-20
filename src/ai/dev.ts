@@ -1,3 +1,4 @@
+
 import { config } from 'dotenv';
 config();
 
@@ -11,3 +12,4 @@ import '@/ai/flows/ai-timetable-generator.ts';
 import '@/ai/flows/ai-reference-analyzer.ts';
 import '@/ai/flows/ai-doubt-solver.ts';
 import '@/ai/flows/ai-equation-solver.ts';
+import '@/ai/flows/ai-voice-note-processor.ts';

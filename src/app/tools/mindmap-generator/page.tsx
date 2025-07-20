@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateMindmap, type MindmapNode } from '@/ai/flows/ai-mindmap-generator';
 import { Textarea } from '@/components/ui/textarea';
 import { MindmapDisplay } from '@/components/mindmap';
+import { saveLibraryItem } from '@/lib/library';
 
 export default function MindmapGeneratorPage() {
   const { toast } = useToast();
@@ -32,9 +33,14 @@ export default function MindmapGeneratorPage() {
     try {
       const result = await generateMindmap({ text: inputText });
       setMindmapData(result.root);
+      saveLibraryItem({
+        type: 'Mindmap',
+        title: `Mindmap for ${result.root.title}`,
+        payload: result,
+      });
       toast({
         title: 'Mindmap Generated!',
-        description: 'Your AI-powered mindmap is ready to explore.',
+        description: 'Your AI-powered mindmap is ready and saved to your library.',
       });
     } catch (error) {
       console.error(error);

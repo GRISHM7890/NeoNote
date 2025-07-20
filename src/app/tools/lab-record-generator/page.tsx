@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateLabRecord, type GenerateLabRecordInput, type GenerateLabRecordOutput } from '@/ai/flows/ai-lab-record-generator';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { saveLibraryItem } from '@/lib/library';
 
 const subjects = ['Physics', 'Chemistry', 'Biology'];
 const classLevels = ['Class 9', 'Class 10', 'Class 11', 'Class 12'];
@@ -48,9 +49,14 @@ export default function LabRecordGeneratorPage() {
     try {
       const result = await generateLabRecord(input);
       setRecord(result);
+      saveLibraryItem({
+        type: 'Lab Record',
+        title: `Lab Record for "${result.aim}"`,
+        payload: { input, result },
+      });
       toast({
         title: 'Lab Record Generated!',
-        description: `Your practical write-up for "${experimentName}" is ready.`,
+        description: `Your practical write-up for "${experimentName}" is ready and saved to your library.`,
       });
     } catch (error) {
       console.error(error);

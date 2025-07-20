@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2, Lightbulb, ListChecks, BookOpen, UploadCloud, FileText } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
+import { saveLibraryItem } from '@/lib/library';
+import { Input } from '@/components/ui/input';
 
 function FlashcardCreatorContent() {
   const { toast } = useToast();
@@ -82,11 +84,17 @@ function FlashcardCreatorContent() {
     setIsLoading(true);
     setStudySet(null);
     try {
-      const result = await generateFlashcards({ notes, topic: topic || 'General' });
+      const currentTopic = topic || 'General Flashcards';
+      const result = await generateFlashcards({ notes, topic: currentTopic });
       setStudySet(result);
+      saveLibraryItem({
+        type: 'Flashcard Set',
+        title: `Flashcards for ${currentTopic}`,
+        payload: result,
+      });
       toast({
         title: 'Study set generated!',
-        description: 'Your flashcards, quizzes, and concepts are ready.',
+        description: 'Your flashcards, quizzes, and concepts are ready and saved to your library.',
       });
     } catch (error) {
       console.error(error);
@@ -144,10 +152,15 @@ function FlashcardCreatorContent() {
               <Textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                rows={10}
+                rows={8}
                 placeholder="Paste your text here or extract it from an image..."
                 className="text-base bg-card"
               />
+               <Input 
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  placeholder="Enter a topic for this set (e.g. Photosynthesis)"
+                />
 
               <Button onClick={handleGenerateStudySet} disabled={isLoading || !notes} className="w-full text-lg py-6 shadow-glow hover:shadow-glow-sm transition-shadow">
                 {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}

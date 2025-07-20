@@ -15,6 +15,7 @@ import { generateSummary, type GenerateSummaryInput, type GenerateSummaryOutput 
 import { imageToText } from '@/ai/flows/image-to-text';
 import Image from 'next/image';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { saveLibraryItem } from '@/lib/library';
 
 export default function SummaryGeneratorPage() {
   const { toast } = useToast();
@@ -88,9 +89,14 @@ export default function SummaryGeneratorPage() {
     try {
       const result = await generateSummary(input);
       setSummary(result);
+      saveLibraryItem({
+        type: 'Summary',
+        title: result.title || 'Untitled Summary',
+        payload: result,
+      });
       toast({
         title: 'Summary Generated!',
-        description: 'Your personalized summary is ready.',
+        description: 'Your personalized summary is ready and saved to your library.',
       });
     } catch (error) {
       console.error(error);

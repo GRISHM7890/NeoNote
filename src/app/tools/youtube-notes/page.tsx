@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { youtubeNotesGenerator, type YoutubeNotesGeneratorInput, type YoutubeNotesGeneratorOutput } from '@/ai/flows/ai-youtube-notes-generator';
 import { Video, Loader2, Sparkles, Wand2, Lightbulb, ListChecks, FunctionSquare, Clock, Youtube } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { saveLibraryItem } from '@/lib/library';
 
 const Section = ({ title, icon: Icon, children }: { title: string, icon: React.ElementType, children: React.ReactNode }) => (
     <div>
@@ -46,9 +47,14 @@ export default function YoutubeNotesPage() {
         try {
             const result = await youtubeNotesGenerator({ videoUrl });
             setNotes(result);
+            saveLibraryItem({
+              type: 'YouTube Video Notes',
+              title: `Notes for "${result.title}"`,
+              payload: { videoUrl, result },
+            });
             toast({
                 title: 'Notes Generated!',
-                description: 'Your notes from the YouTube video are ready.',
+                description: 'Your notes from the YouTube video are ready and saved to your library.',
             });
         } catch (error) {
             console.error(error);

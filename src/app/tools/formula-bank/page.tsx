@@ -14,6 +14,7 @@ import { generateFormulas, type GenerateFormulasInput, type GenerateFormulasOutp
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { saveLibraryItem } from '@/lib/library';
 
 const subjects = ['Physics', 'Mathematics', 'Chemistry'];
 
@@ -42,9 +43,14 @@ export default function FormulaBankPage() {
     try {
       const result = await generateFormulas(input);
       setFormulaSet(result);
+      saveLibraryItem({
+        type: 'Formula Bank',
+        title: `Formulas for ${topic}`,
+        payload: { input, result },
+      });
       toast({
         title: 'Formulas Generated!',
-        description: `Your formula bank for ${topic} is ready.`,
+        description: `Your formula bank for ${topic} is ready and saved to your library.`,
       });
     } catch (error) {
       console.error(error);

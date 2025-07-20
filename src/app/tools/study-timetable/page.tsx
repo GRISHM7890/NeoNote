@@ -12,6 +12,7 @@ import { generateTimetable, type GenerateTimetableInput, type GenerateTimetableO
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { saveLibraryItem } from '@/lib/library';
 
 export default function StudyTimetablePage() {
   const { toast } = useToast();
@@ -61,9 +62,14 @@ export default function StudyTimetablePage() {
     try {
       const result = await generateTimetable(input);
       setSchedule(result);
+      saveLibraryItem({
+        type: 'Study Timetable',
+        title: result.title || `Study Plan for ${examName || 'General Studies'}`,
+        payload: { input, result },
+      });
       toast({
         title: 'Timetable Generated!',
-        description: `Your personalized study plan is ready.`,
+        description: `Your personalized study plan is ready and saved to your library.`,
       });
     } catch (error) {
       console.error(error);

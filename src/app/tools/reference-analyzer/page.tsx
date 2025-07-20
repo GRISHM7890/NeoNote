@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -12,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MCQ } from '@/components/mcq';
 import { Separator } from '@/components/ui/separator';
+import { saveLibraryItem } from '@/lib/library';
 
 export default function ReferenceAnalyzerPage() {
     const { toast } = useToast();
@@ -38,9 +40,14 @@ export default function ReferenceAnalyzerPage() {
         try {
             const result = await analyzeReferenceBook(input);
             setAnalysisResult(result);
+            saveLibraryItem({
+              type: 'Reference Book Analysis',
+              title: `Analysis for ${bookTitle}`,
+              payload: { input, result },
+            });
             toast({
                 title: 'Analysis Complete!',
-                description: 'Your study questions are ready.',
+                description: 'Your study questions are ready and saved to your library.',
             });
         } catch (error) {
             console.error(error);

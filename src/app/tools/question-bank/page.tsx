@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { MCQ } from '@/components/mcq';
 import { Separator } from '@/components/ui/separator';
+import { saveLibraryItem } from '@/lib/library';
 
 const subjects = ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'History', 'Geography', 'Civics', 'Economics', 'English', 'Computer Science'];
 
@@ -62,9 +63,14 @@ export default function QuestionBankPage() {
     try {
       const result = await generateQuestions(input);
       setQuestionSet(result);
+      saveLibraryItem({
+        type: 'Question Bank',
+        title: `Test for ${topic}`,
+        payload: { input, result },
+      });
       toast({
         title: 'Questions Generated!',
-        description: `Your question bank for ${topic} is ready.`,
+        description: `Your question bank for ${topic} is ready and saved to your library.`,
       });
     } catch (error) {
       console.error(error);

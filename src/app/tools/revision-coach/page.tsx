@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
+import { saveLibraryItem } from '@/lib/library';
 
 type RevisionItem = {
     day: number;
@@ -72,9 +73,14 @@ export default function RevisionCoachPage() {
     try {
       const result = await generateRevisionSchedule(input);
       setSchedule(result.schedule.map(item => ({...item, isCompleted: false})));
+      saveLibraryItem({
+        type: 'Revision Schedule',
+        title: `Revision Plan for ${totalDays} days`,
+        payload: { input, result },
+      });
       toast({
         title: 'Revision Plan Generated!',
-        description: 'Your personalized spaced repetition schedule is ready.',
+        description: 'Your personalized spaced repetition schedule is ready and saved to your library.',
       });
     } catch (error) {
       console.error(error);

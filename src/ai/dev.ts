@@ -15,4 +15,6 @@ import '@/ai/flows/ai-equation-solver.ts';
 import '@/ai/flows/ai-voice-note-processor.ts';
 import '@/ai/flows/ai-homework-organizer.ts';
 import '@/ai/flows/ai-mindmap-generator.ts';
+import '@/ai/flows/ai-battle-question-generator.ts';
+
 

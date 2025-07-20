@@ -9,7 +9,7 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="flex flex-1 flex-col p-4 md:p-8">
         <header className="mb-8">
-          <h1 className="font-headline text-3xl md:text-4xl text-foreground">Welcome to Synapse Study</h1>
+          <h1 className="font-headline text-3xl md:text-4xl text-foreground">Welcome to Shreeya's AI</h1>
           <p className="text-muted-foreground mt-2">Your AI-powered study partner. Let's get started.</p>
         </header>
         <main className="flex-1 flex flex-col items-center justify-center">

@@ -94,7 +94,7 @@ function StudyPageContent() {
         </header>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          <Card className="bg-card/80">
+          <Card className="bg-secondary/30">
             <CardHeader>
               <CardTitle className="font-headline">Your Notes</CardTitle>
             </CardHeader>
@@ -104,7 +104,7 @@ function StudyPageContent() {
                 onChange={(e) => setNotes(e.target.value)}
                 rows={15}
                 placeholder="Start typing your notes here or upload an image..."
-                className="text-base"
+                className="text-base bg-card"
               />
               <Button onClick={handleGenerateStudySet} disabled={isLoading} className="w-full shadow-glow hover:shadow-glow-sm transition-shadow">
                 {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
@@ -113,7 +113,7 @@ function StudyPageContent() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/80">
+          <Card className="bg-secondary/30">
             <CardHeader>
               <CardTitle className="font-headline">AI-Generated Study Set</CardTitle>
             </CardHeader>
@@ -136,7 +136,7 @@ function StudyPageContent() {
                 <Accordion type="multiple" defaultValue={['concepts', 'flashcards', 'mcqs']} className="w-full">
                   <AccordionItem value="concepts">
                     <AccordionTrigger className="font-headline text-lg"><Lightbulb className="mr-2 text-accent"/>Core Concepts</AccordionTrigger>
-                    <AccordionContent className="space-y-2">
+                    <AccordionContent className="flex flex-wrap gap-2">
                       {studySet.coreConcepts.map((concept, i) => (
                         <Badge key={i} variant="secondary">{concept}</Badge>
                       ))}

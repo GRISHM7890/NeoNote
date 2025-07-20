@@ -27,7 +27,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <SidebarHeader>
             <div className="flex items-center gap-2 p-2">
               <Icons.logo className="w-8 h-8 text-accent" />
-              <span className="font-headline text-lg group-data-[collapsible=icon]:hidden">Synapse</span>
+              <span className="font-headline text-lg group-data-[collapsible=icon]:hidden">Shreeya's AI</span>
             </div>
           </SidebarHeader>
           <SidebarContent>

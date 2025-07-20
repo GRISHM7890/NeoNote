@@ -26,7 +26,7 @@ export function MCQ({ question, options, correctAnswer }: MCQProps) {
   const isCorrect = selectedValue === correctAnswer;
 
   return (
-    <Card className="bg-card/80">
+    <Card className="bg-secondary/30">
       <CardHeader>
         <CardTitle className="font-headline text-lg">{question}</CardTitle>
       </CardHeader>

@@ -14,7 +14,7 @@ export default function NewNotePage() {
           <p className="text-muted-foreground mt-2">Choose how you want to start your next study session.</p>
         </header>
         <div className="grid md:grid-cols-2 gap-8 items-start">
-          <Card className="bg-card/80 border-primary/20">
+          <Card className="bg-secondary/30 border-primary/20">
             <CardHeader>
               <CardTitle className="font-headline flex items-center gap-2"><ImageIcon className="text-accent" /> From Image</CardTitle>
               <CardDescription>Upload a textbook page and let AI do the heavy lifting.</CardDescription>
@@ -23,7 +23,7 @@ export default function NewNotePage() {
               <ImageUploader />
             </CardContent>
           </Card>
-          <Card className="bg-card/80 border-primary/20 flex flex-col items-center justify-center text-center p-8 h-full">
+          <Card className="bg-secondary/30 border-primary/20 flex flex-col items-center justify-center text-center p-8 h-full">
              <div className="flex flex-col items-center justify-center flex-1">
                 <CardHeader>
                   <CardTitle className="font-headline flex items-center gap-2"><FileText className="text-accent" /> From Scratch</CardTitle>

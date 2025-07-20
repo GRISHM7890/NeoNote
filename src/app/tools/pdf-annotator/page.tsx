@@ -34,16 +34,19 @@ export default function PdfAnnotatorPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isPdfLoading, setIsPdfLoading] = useState(true);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     setCurrentPage(1);
     setMessages([]);
+    setIsPdfLoading(false);
   };
   
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setIsPdfLoading(true);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPdfData(reader.result as string);
@@ -106,12 +109,16 @@ export default function PdfAnnotatorPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="border rounded-md overflow-hidden">
-                    <Document file={pdfData} onLoadSuccess={onDocumentLoadSuccess}>
-                      <Page pageNumber={currentPage} width={width ? width : 1} />
-                    </Document>
+                  <div className="border rounded-md overflow-hidden min-h-[500px] flex items-center justify-center">
+                    {(isPdfLoading || !width) ? (
+                        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                    ) : (
+                        <Document file={pdfData} onLoadSuccess={onDocumentLoadSuccess} loading="">
+                            <Page pageNumber={currentPage} width={width} loading=""/>
+                        </Document>
+                    )}
                   </div>
-                  {numPages > 1 && (
+                  {numPages > 1 && !isPdfLoading && (
                      <div className="flex justify-between items-center">
                         <Button onClick={goToPrevPage} disabled={currentPage <= 1} variant="outline"><ChevronLeft /> Prev</Button>
                         <p className="text-sm text-muted-foreground">Page {currentPage} of {numPages}</p>

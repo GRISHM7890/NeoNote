@@ -30,8 +30,19 @@ const ProcessVoiceNoteOutputSchema = z.object({
 });
 export type ProcessVoiceNoteOutput = z.infer<typeof ProcessVoiceNoteOutputSchema>;
 
+// 2. Define the AI prompt for transcription
+const transcribeAudioPrompt = ai.definePrompt({
+    name: 'transcribeAudioPrompt',
+    input: { schema: ProcessVoiceNoteInputSchema },
+    output: { schema: z.object({ transcript: z.string() }) },
+    prompt: `Transcribe the following audio recording into text. Provide only the raw text.
+    
+    Audio: {{media url=audioDataUri}}`,
+    model: googleAI.model('gemini-1.5-flash'),
+});
 
-// 2. Define the AI prompt for formatting the transcript
+
+// 3. Define the AI prompt for formatting the transcript
 const formatNotesPrompt = ai.definePrompt({
   name: 'formatNotesPrompt',
   input: { schema: z.string() }, // Input is the raw transcript text
@@ -56,7 +67,7 @@ Produce the formatted notes.`,
 });
 
 
-// 3. Define the main flow
+// 4. Define the main flow
 const processVoiceNoteFlow = ai.defineFlow(
   {
     name: 'processVoiceNoteFlow',
@@ -65,18 +76,13 @@ const processVoiceNoteFlow = ai.defineFlow(
   },
   async (input) => {
     // Step 1: Transcribe audio to text
-    // Note: Gemini 1.5 Flash supports audio transcription directly.
-    const { text: rawTranscript } = await ai.generate({
-      model: googleAI.model('gemini-1.5-flash'),
-      prompt: [
-        { text: 'Transcribe the following audio recording into text. Provide only the raw text.' },
-        { media: { url: input.audioDataUri } },
-      ],
-    });
-
-    if (!rawTranscript) {
+    const { output: transcriptionResult } = await transcribeAudioPrompt(input);
+    
+    if (!transcriptionResult?.transcript) {
       throw new Error('Transcription failed. The AI did not return any text.');
     }
+
+    const rawTranscript = transcriptionResult.transcript;
 
     // Step 2: Format the raw transcript into notes
     const { output: formattingResult } = await formatNotesPrompt(rawTranscript);
@@ -92,7 +98,7 @@ const processVoiceNoteFlow = ai.defineFlow(
   }
 );
 
-// 4. Export a wrapper function for client-side use
+// 5. Export a wrapper function for client-side use
 export async function processVoiceNote(input: ProcessVoiceNoteInput): Promise<ProcessVoiceNoteOutput> {
   return processVoiceNoteFlow(input);
 }

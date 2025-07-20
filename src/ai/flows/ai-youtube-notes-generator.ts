@@ -16,7 +16,7 @@ import { z } from 'genkit';
 
 // 1. Define Input/Output Schemas
 
-export const YoutubeNotesGeneratorInputSchema = z.object({
+const YoutubeNotesGeneratorInputSchema = z.object({
   videoUrl: z.string().url().describe('The URL of the YouTube video to be processed.'),
 });
 export type YoutubeNotesGeneratorInput = z.infer<typeof YoutubeNotesGeneratorInputSchema>;
@@ -31,7 +31,7 @@ const TimestampSchema = z.object({
     description: z.string().describe('A description of the key concept explained at this timestamp.'),
 });
 
-export const YoutubeNotesGeneratorOutputSchema = z.object({
+const YoutubeNotesGeneratorOutputSchema = z.object({
     title: z.string().describe('The title of the YouTube video.'),
     summary: z.string().describe('A concise summary of the entire video content.'),
     keyTakeaways: z.array(z.string()).describe('A list of the most important points or takeaways from the video.'),

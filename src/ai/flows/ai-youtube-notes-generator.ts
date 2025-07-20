@@ -16,10 +16,10 @@ import { z } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 
 
+export type YoutubeNotesGeneratorInput = z.infer<typeof YoutubeNotesGeneratorInputSchema>;
 const YoutubeNotesGeneratorInputSchema = z.object({
   videoUrl: z.string().url().describe('The URL of the YouTube video to be processed.'),
 });
-export type YoutubeNotesGeneratorInput = z.infer<typeof YoutubeNotesGeneratorInputSchema>;
 
 const FormulaSchema = z.object({
     formula: z.string().describe('The mathematical or scientific formula identified.'),
@@ -31,6 +31,7 @@ const TimestampSchema = z.object({
     description: z.string().describe('A description of the key concept explained at this timestamp.'),
 });
 
+export type YoutubeNotesGeneratorOutput = z.infer<typeof YoutubeNotesGeneratorOutputSchema>;
 const YoutubeNotesGeneratorOutputSchema = z.object({
     title: z.string().describe('The title of the YouTube video.'),
     summary: z.string().describe('A concise summary of the entire video content.'),
@@ -38,7 +39,7 @@ const YoutubeNotesGeneratorOutputSchema = z.object({
     formulas: z.array(FormulaSchema).optional().describe('An array of key formulas mentioned in the video. Omit if none are found.'),
     timestamps: z.array(TimestampSchema).describe('An array of important, timestamped revision points.'),
 });
-export type YoutubeNotesGeneratorOutput = z.infer<typeof YoutubeNotesGeneratorOutputSchema>;
+
 
 // 2. Define the AI prompt
 const generateNotesPrompt = ai.definePrompt({
@@ -72,7 +73,7 @@ const youtubeNotesGeneratorFlow = ai.defineFlow(
   async (input) => {
     const { output } = await generateNotesPrompt(input);
     if (!output) {
-      throw new Error('The AI failed to generate notes for this video. Please try again.');
+      throw new Error('The AI failed to generate notes that matched the required format. This video might not be processable.');
     }
     return output;
   }

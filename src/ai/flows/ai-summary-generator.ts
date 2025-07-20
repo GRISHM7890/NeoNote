@@ -11,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const GenerateSummaryInputSchema = z.object({
+const GenerateSummaryInputSchema = z.object({
   text: z.string().describe('The source text to be summarized.'),
   studyLevel: z
     .enum(['simple', 'advanced'])
@@ -26,7 +26,7 @@ export const GenerateSummaryInputSchema = z.object({
 export type GenerateSummaryInput = z.infer<typeof GenerateSummaryInputSchema>;
 
 
-export const GenerateSummaryOutputSchema = z.object({
+const GenerateSummaryOutputSchema = z.object({
   title: z.string().optional().describe('A concise, relevant title for the summary.'),
   content: z.string().describe('The main body of the generated summary.'),
   keywords: z.array(z.string()).optional().describe('A list of important keywords from the text.'),

@@ -3,8 +3,6 @@ import type { SVGProps } from "react";
 const SynapseIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -13,19 +11,8 @@ const SynapseIcon = (props: SVGProps<SVGSVGElement>) => (
     strokeLinejoin="round"
     {...props}
   >
-    <path d="M12 2a10 10 0 1 0 10 10" />
-    <path d="M12 2a10 10 0 1 0-9.44 6.64" />
-    <path d="M12 2a10 10 0 1 1-6.64 9.44" />
-    <path d="M12 2a10 10 0 1 1 .56 9.98" />
+    <path d="M16.5 6.5c-1.5 0-3.1.9-4.5 2.5-1.4-1.6-3-2.5-4.5-2.5-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5c1.5 0 3.1-.9 4.5-2.5 1.4 1.6 3 2.5 4.5 2.5 2.5 0 4.5-2 4.5-4.5s-2-4.5-4.5-4.5z" />
     <circle cx="12" cy="12" r="2" />
-    <path d="M12 4V2" />
-    <path d="M12 22v-2" />
-    <path d="M20 12h2" />
-    <path d="M2 12h2" />
-    <path d="m18.36 5.64 1.42-1.42" />
-    <path d="m4.22 19.78 1.42-1.42" />
-    <path d="m18.36 18.36-1.42-1.42" />
-    <path d="m4.22 4.22 1.42 1.42" />
   </svg>
 );
 

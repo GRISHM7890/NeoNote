@@ -40,7 +40,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked },
     { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog },
     { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp },
-    { href: '/tools/focus-mode', label: 'Focus Zen Mode', icon: Leaf },
+    { href: '/tools/focus-zen', label: 'Focus Zen Mode', icon: Leaf },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

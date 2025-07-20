@@ -2,7 +2,7 @@
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine } from 'lucide-react';
+import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -23,6 +23,7 @@ const features = [
   { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked, description: "Get detailed solutions for any question." },
   { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog, description: "Test your active recall with an AI examiner." },
   { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp, description: "Visualize progress and get AI rank analysis." },
+  { href: '/tools/focus-zen', label: 'Focus Zen Mode', icon: Leaf, description: "Enter a distraction-free, AI-powered focus zone." },
 ];
 
 export default function DashboardPage() {

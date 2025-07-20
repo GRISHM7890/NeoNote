@@ -13,7 +13,7 @@ import { z } from 'genkit';
 
 const QuestionTypesSchema = z.enum(['mcq', 'short', 'long']);
 
-export const GenerateQuestionsInputSchema = z.object({
+const GenerateQuestionsInputSchema = z.object({
   subject: z
     .string()
     .describe('The subject for which to generate questions (e.g., "Biology").'),
@@ -49,7 +49,7 @@ const LongAnswerQuestionSchema = z.object({
     answer: z.string().describe("A detailed, correct answer to the question, often in bullet points or steps."),
 });
 
-export const GenerateQuestionsOutputSchema = z.object({
+const GenerateQuestionsOutputSchema = z.object({
   multipleChoiceQuestions: z.array(MultipleChoiceQuestionSchema).optional().describe('An array of generated multiple choice questions.'),
   shortAnswerQuestions: z.array(ShortAnswerQuestionSchema).optional().describe('An array of generated short answer questions.'),
   longAnswerQuestions: z.array(LongAnswerQuestionSchema).optional().describe('An array of generated long answer questions.'),

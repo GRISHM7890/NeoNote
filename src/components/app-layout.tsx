@@ -40,7 +40,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked },
     { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog },
     { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp },
-    { href: '/tools/voice-notes', label: 'Voice Note to Study Notes Converter', icon: Mic },
     { href: '/tools/voice-commands', label: 'Voice-Activated Commands', icon: MicVocal },
     { href: '/tools/pdf-annotator', label: 'Smart PDF Annotator', icon: FilePenLine },
     { href: '/tools/focus-mode', label: 'Focus Zen Mode', icon: Leaf },

@@ -36,7 +36,7 @@ const GenerateQuestionsInputSchema = z.object({
 
 const MultipleChoiceQuestionSchema = z.object({
     question: z.string().describe("The multiple choice question."),
-    options: z.array(z.string()).length(4).describe("An array of 4 possible options."),
+    options: z.array(z.string()).length(4).describe("An array of 4 plausible options."),
     correctAnswer: z.string().describe("The correct answer from the options."),
 });
 
@@ -52,9 +52,9 @@ const LongAnswerQuestionSchema = z.object({
 
 export type GenerateQuestionsOutput = z.infer<typeof GenerateQuestionsOutputSchema>;
 const GenerateQuestionsOutputSchema = z.object({
-  multipleChoiceQuestions: z.array(MultipleChoiceQuestionSchema).optional().describe('An array of generated multiple choice questions.'),
-  shortAnswerQuestions: z.array(ShortAnswerQuestionSchema).optional().describe('An array of generated short answer questions.'),
-  longAnswerQuestions: z.array(LongAnswerQuestionSchema).optional().describe('An array of generated long answer questions.'),
+  multipleChoiceQuestions: z.array(MultipleChoiceQuestionSchema).optional().describe('An array of generated multiple choice questions. This should only be present if "mcq" was in the requested question types.'),
+  shortAnswerQuestions: z.array(ShortAnswerQuestionSchema).optional().describe('An array of generated short answer questions. This should only be present if "short" was in the requested question types.'),
+  longAnswerQuestions: z.array(LongAnswerQuestionSchema).optional().describe('An array of generated long answer questions. This should only be present if "long" was in the requested question types.'),
 });
 
 export async function generateQuestions(input: GenerateQuestionsInput): Promise<GenerateQuestionsOutput> {
@@ -65,25 +65,26 @@ const prompt = ai.definePrompt({
   name: 'generateQuestionsPrompt',
   input: { schema: GenerateQuestionsInputSchema },
   output: { schema: GenerateQuestionsOutputSchema },
-  prompt: `You are an expert educator and exam creator for students. Your task is to create a high-quality question bank based on the user's specifications.
+  prompt: `You are an expert educator and exam creator. Your task is to create a high-quality question bank based on the user's specifications.
 
 **Subject:** {{subject}}
 **Topic:** {{topic}}
 **Number of Questions per Type:** {{questionCount}}
-**Question Types to Generate:**
+
+**Mandatory Question Types to Generate:**
 {{#each questionTypes}}
 - {{this}}
 {{/each}}
 
-**Instructions:**
-1.  Carefully read the list of "Question Types to Generate". You **MUST** generate questions for **ALL** types listed.
-2.  Generate exactly {{questionCount}} questions for EACH of the types specified.
-3.  The questions must be relevant to the provided subject and topic.
-4.  For Multiple Choice Questions (MCQ), provide exactly four plausible options and identify the correct one.
-5.  For Short Answer questions, the answer should be concise (1-3 sentences).
-6.  For Long Answer questions, the answer must be detailed and well-structured, as if for an exam. Use paragraphs, lists, or steps as appropriate.
-7.  Ensure the difficulty is appropriate for a high school or competitive exam student.
-8.  Return the result in the specified JSON format. If a question type was not requested (e.g., 'long' is not in the list), do not include its key (e.g., 'longAnswerQuestions') in the final JSON output.
+**CRITICAL INSTRUCTIONS:**
+1.  You **MUST** generate questions for **ALL** types listed under "Mandatory Question Types to Generate". There are no exceptions.
+2.  Generate **EXACTLY** {{questionCount}} questions for EACH of the specified types. Do not generate more or less.
+3.  The questions must be highly relevant to the provided subject and topic.
+4.  For Multiple Choice Questions (MCQ): Provide exactly four plausible options and clearly identify the correct one.
+5.  For Short Answer questions: The answer should be concise and direct (typically 1-3 sentences).
+6.  For Long Answer questions: The answer must be comprehensive, detailed, and well-structured, suitable for an exam. Use paragraphs, lists, or steps as needed to provide a thorough explanation.
+7.  The difficulty level should be appropriate for a high school or competitive exam student.
+8.  Return the result in the specified JSON format. If a question type was not requested, do not include its key in the final JSON output. For example, if 'long' is not in the list, the 'longAnswerQuestions' key should be omitted entirely from the JSON.
 `,
 });
 

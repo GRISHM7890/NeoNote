@@ -164,7 +164,7 @@ export default function VoiceNoteConverterPage() {
                     <CardTitle className='font-headline text-2xl flex items-center gap-2'>
                         <FileText className='text-accent'/>
                         Your AI-Formatted Study Notes
-                    </Ttle>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {isLoading && (

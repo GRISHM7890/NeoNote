@@ -78,6 +78,9 @@ const findSolutionFlow = ai.defineFlow(
   },
   async (input) => {
     const { output } = await prompt(input);
-    return output!;
+    if (!output) {
+        throw new Error("The AI failed to generate a valid solution. Please check your query or try rephrasing it.");
+    }
+    return output;
   }
 );

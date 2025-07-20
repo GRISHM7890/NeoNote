@@ -13,6 +13,7 @@ import { z } from 'genkit';
 
 const QuestionTypesSchema = z.enum(['mcq', 'short', 'long']);
 
+export type GenerateQuestionsInput = z.infer<typeof GenerateQuestionsInputSchema>;
 const GenerateQuestionsInputSchema = z.object({
   subject: z
     .string()
@@ -31,7 +32,7 @@ const GenerateQuestionsInputSchema = z.object({
     .min(1)
     .describe('An array of question types to generate.'),
 });
-export type GenerateQuestionsInput = z.infer<typeof GenerateQuestionsInputSchema>;
+
 
 const MultipleChoiceQuestionSchema = z.object({
     question: z.string().describe("The multiple choice question."),
@@ -49,12 +50,12 @@ const LongAnswerQuestionSchema = z.object({
     answer: z.string().describe("A detailed, correct answer to the question, often in bullet points or steps."),
 });
 
+export type GenerateQuestionsOutput = z.infer<typeof GenerateQuestionsOutputSchema>;
 const GenerateQuestionsOutputSchema = z.object({
   multipleChoiceQuestions: z.array(MultipleChoiceQuestionSchema).optional().describe('An array of generated multiple choice questions.'),
   shortAnswerQuestions: z.array(ShortAnswerQuestionSchema).optional().describe('An array of generated short answer questions.'),
   longAnswerQuestions: z.array(LongAnswerQuestionSchema).optional().describe('An array of generated long answer questions.'),
 });
-export type GenerateQuestionsOutput = z.infer<typeof GenerateQuestionsOutputSchema>;
 
 export async function generateQuestions(input: GenerateQuestionsInput): Promise<GenerateQuestionsOutput> {
   return generateQuestionsFlow(input);
@@ -64,7 +65,7 @@ const prompt = ai.definePrompt({
   name: 'generateQuestionsPrompt',
   input: { schema: GenerateQuestionsInputSchema },
   output: { schema: GenerateQuestionsOutputSchema },
-  prompt: `You are an expert educator and exam creator for students in India. Your task is to create a high-quality question bank based on the user's specifications.
+  prompt: `You are an expert educator and exam creator for students. Your task is to create a high-quality question bank based on the user's specifications.
 
 **Subject:** {{subject}}
 **Topic:** {{topic}}
@@ -75,13 +76,14 @@ const prompt = ai.definePrompt({
 {{/each}}
 
 **Instructions:**
-1.  Generate exactly {{questionCount}} questions for EACH of the types specified in "Question Types to Generate".
-2.  The questions should be relevant to the provided subject and topic.
-3.  For Multiple Choice Questions (MCQ), provide exactly four plausible options and identify the correct one.
-4.  For Short Answer questions, the answer should be concise (1-3 sentences).
-5.  For Long Answer questions, the answer should be detailed and well-structured, as if for an exam.
-6.  Ensure the difficulty is appropriate for a high school or competitive exam student.
-7.  Return the result in the specified JSON format. If a question type is not requested, do not include its key in the output.
+1.  Carefully read the list of "Question Types to Generate". You **MUST** generate questions for **ALL** types listed.
+2.  Generate exactly {{questionCount}} questions for EACH of the types specified.
+3.  The questions must be relevant to the provided subject and topic.
+4.  For Multiple Choice Questions (MCQ), provide exactly four plausible options and identify the correct one.
+5.  For Short Answer questions, the answer should be concise (1-3 sentences).
+6.  For Long Answer questions, the answer must be detailed and well-structured, as if for an exam. Use paragraphs, lists, or steps as appropriate.
+7.  Ensure the difficulty is appropriate for a high school or competitive exam student.
+8.  Return the result in the specified JSON format. If a question type was not requested (e.g., 'long' is not in the list), do not include its key (e.g., 'longAnswerQuestions') in the final JSON output.
 `,
 });
 

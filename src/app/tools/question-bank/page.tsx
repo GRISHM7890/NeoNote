@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { MCQ } from '@/components/mcq';
 import { Separator } from '@/components/ui/separator';
 
 const subjects = ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'History', 'Geography', 'Civics'];
@@ -21,11 +22,11 @@ export default function QuestionBankPage() {
   const { toast } = useToast();
   const [subject, setSubject] = useState('');
   const [topic, setTopic] = useState('');
-  const [questionCount, setQuestionCount] = useState(10);
+  const [questionCount, setQuestionCount] = useState(5);
   const [questionTypes, setQuestionTypes] = useState({
     mcq: true,
-    short: false,
-    long: false,
+    short: true,
+    long: true,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -77,16 +78,17 @@ export default function QuestionBankPage() {
     }
   };
   
-  const QuestionDisplay = ({ title, questions, icon: Icon }: { title: string, questions: { question: string, answer: string }[], icon: React.ElementType }) => (
-    <AccordionItem value={title.toLowerCase().replace(' ', '-')}>
+  const QuestionDisplay = ({ title, questions, icon: Icon, questionNumberStart = 1 }: { title: string, questions: { question: string, answer: string }[], icon: React.ElementType, questionNumberStart?: number }) => (
+    <AccordionItem value={title.toLowerCase().replace(/\s/g, '-')}>
       <AccordionTrigger className="font-headline text-lg"><Icon className="mr-2 text-accent"/>{title} ({questions.length})</AccordionTrigger>
       <AccordionContent className="space-y-4">
         {questions.map((q, i) => (
           <div key={i} className="space-y-2 rounded-md border p-4 bg-background/50">
-            <p className="font-semibold">{i + 1}. {q.question}</p>
-            <div className="text-sm text-muted-foreground prose prose-invert">
+            <p className="font-semibold">{questionNumberStart + i}. {q.question}</p>
+            <Separator />
+            <div className="text-sm text-muted-foreground prose prose-invert max-w-none">
                 <p className='font-bold text-accent'>Answer:</p>
-                <p>{q.answer}</p>
+                <div dangerouslySetInnerHTML={{ __html: q.answer.replace(/\n/g, '<br />') }} />
             </div>
           </div>
         ))}
@@ -175,22 +177,19 @@ export default function QuestionBankPage() {
                                    <AccordionTrigger className="font-headline text-lg"><CheckSquare className="mr-2 text-accent"/>Multiple Choice Questions ({questionSet.multipleChoiceQuestions.length})</AccordionTrigger>
                                    <AccordionContent className="space-y-4">
                                       {questionSet.multipleChoiceQuestions.map((q, i) => (
-                                          <div key={i} className="space-y-2 rounded-md border p-4 bg-background/50">
-                                              <p className="font-semibold">{i + 1}. {q.question}</p>
-                                              <ul className="list-disc list-inside space-y-1 pl-4 text-muted-foreground">
-                                                  {q.options.map((opt, j) => <li key={j}>{opt}</li>)}
-                                              </ul>
-                                              <p className="text-sm font-bold text-accent">Correct Answer: <span className="font-normal text-muted-foreground">{q.correctAnswer}</span></p>
-                                          </div>
+                                         <div key={i}>
+                                            <MCQ {...q} questionNumber={i+1} />
+                                            {i < questionSet.multipleChoiceQuestions.length - 1 && <Separator className="my-4"/>}
+                                         </div>
                                       ))}
                                    </AccordionContent>
                                </AccordionItem>
                            )}
                            {questionSet.shortAnswerQuestions && questionSet.shortAnswerQuestions.length > 0 && (
-                                <QuestionDisplay title="Short Answer Questions" questions={questionSet.shortAnswerQuestions} icon={Edit} />
+                                <QuestionDisplay title="Short Answer Questions" questions={questionSet.shortAnswerQuestions} icon={Edit} questionNumberStart={questionSet.multipleChoiceQuestions?.length || 0 + 1} />
                            )}
                            {questionSet.longAnswerQuestions && questionSet.longAnswerQuestions.length > 0 && (
-                                <QuestionDisplay title="Long Answer Questions" questions={questionSet.longAnswerQuestions} icon={MessageSquare} />
+                                <QuestionDisplay title="Long Answer Questions" questions={questionSet.longAnswerQuestions} icon={MessageSquare} questionNumberStart={(questionSet.multipleChoiceQuestions?.length || 0) + (questionSet.shortAnswerQuestions?.length || 0) + 1} />
                            )}
                         </Accordion>
                     )}

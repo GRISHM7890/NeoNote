@@ -124,7 +124,7 @@ export default function NCETrSolutionsPage() {
               {solution && (
                 <>
                   <Section icon={FileQuestion} title="Problem Statement">
-                    <p className="p-4 bg-background rounded-md text-muted-foreground">{solution.problemStatement}</p>
+                    <p className="p-4 bg-background rounded-md text-muted-foreground whitespace-pre-wrap">{solution.problemStatement}</p>
                   </Section>
                   <Section icon={Wand2} title="Step-by-Step Solution">
                      <ol className="list-decimal list-inside space-y-4">
@@ -149,8 +149,8 @@ export default function NCETrSolutionsPage() {
                         <div className="space-y-4">
                             {solution.similarProblems.map((p, i) => (
                                 <div key={i} className="p-3 bg-background rounded-md">
-                                    <p className="font-semibold">{i+1}. {p.problem}</p>
-                                    <p className="text-sm text-accent">Answer: {p.answer}</p>
+                                    <p className="font-semibold whitespace-pre-wrap">{i+1}. {p.problem}</p>
+                                    <p className="text-sm text-accent whitespace-pre-wrap">Answer: {p.answer}</p>
                                 </div>
                             ))}
                         </div>
@@ -167,7 +167,7 @@ export default function NCETrSolutionsPage() {
                                 {solution.pastPaperAnalysis.years.map(year => <Badge key={year} variant="outline">{year}</Badge>)}
                                 </div>
                            </div>
-                           <p className="text-muted-foreground pt-2 border-t border-border">{solution.pastPaperAnalysis.notes}</p>
+                           <p className="text-muted-foreground pt-2 border-t border-border whitespace-pre-wrap">{solution.pastPaperAnalysis.notes}</p>
                        </div>
                   </Section>
                 </>

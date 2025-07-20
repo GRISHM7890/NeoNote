@@ -2,7 +2,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, Video, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -37,6 +37,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/revision-coach', label: 'Revision Reminder AI Coach', icon: BellRing },
     { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical },
     { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen },
+    { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked },
+    { href: '/tools/youtube-notes', label: 'Notes From YouTube', icon: Video },
+    { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog },
+    { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp },
+    { href: '/tools/voice-commands', label: 'Voice-Activated Commands', icon: MicVocal },
+    { href: '/tools/pdf-annotator', label: 'Smart PDF Annotator', icon: FilePenLine },
+    { href: '/tools/focus-mode', label: 'Focus Zen Mode', icon: Leaf },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');
@@ -80,7 +87,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent asChild>
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="max-h-[calc(100vh-250px)] overflow-y-auto">
                       {calculators.map((item) => (
                          <SidebarMenuSubItem key={item.href}>
                             <SidebarMenuSubButton asChild isActive={pathname === item.href}>

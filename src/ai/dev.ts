@@ -8,3 +8,4 @@ import '@/ai/flows/ai-formula-generator.ts';
 import '@/ai/flows/ai-question-generator.ts';
 import '@/ai/flows/ai-lab-record-generator.ts';
 import '@/ai/flows/ai-timetable-generator.ts';
+import '@/ai/flows/ai-reference-analyzer.ts';

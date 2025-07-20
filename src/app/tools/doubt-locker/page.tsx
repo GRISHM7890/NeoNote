@@ -76,7 +76,7 @@ export default function DoubtLockerPage() {
         description: 'Failed to get an answer from the AI. Please try again.',
         variant: 'destructive',
       });
-      setMessages(prev => prev.slice(0, -1)); // Remove the user message if AI fails
+      // Do not remove user message on failure, so they can retry or see what they sent.
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +88,7 @@ export default function DoubtLockerPage() {
         <header className="mb-4 flex items-center gap-4">
           <Lightbulb className="w-10 h-10 text-accent" />
           <div>
-            <h1 className="font-headline text-3xl md:text-4xl">Doubt Locker</h1>
+            <h1 className="font-headline text-3xl md:text-4xl">Doubt Solver Bot</h1>
             <p className="text-muted-foreground mt-1">Ask any doubt. Get instant, step-by-step AI answers.</p>
           </div>
         </header>
@@ -146,12 +146,12 @@ export default function DoubtLockerPage() {
             )}
           </CardContent>
 
-          <div className="p-4 border-t">
+          <div className="p-4 border-t border-border">
             <form onSubmit={handleSubmit} className="relative">
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your question here..."
+                placeholder="Type your question here, or upload an image..."
                 rows={2}
                 className="pr-24"
                 onKeyDown={(e) => {

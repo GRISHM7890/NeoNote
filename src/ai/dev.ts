@@ -7,3 +7,4 @@ import '@/ai/flows/ai-summary-generator.ts';
 import '@/ai/flows/ai-formula-generator.ts';
 import '@/ai/flows/ai-question-generator.ts';
 import '@/ai/flows/ai-lab-record-generator.ts';
+import '@/ai/flows/ai-timetable-generator.ts';

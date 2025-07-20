@@ -13,8 +13,8 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
-// 1. Define Input/Output Schemas
 
 const YoutubeNotesGeneratorInputSchema = z.object({
   videoUrl: z.string().url().describe('The URL of the YouTube video to be processed.'),
@@ -45,12 +45,13 @@ const generateNotesPrompt = ai.definePrompt({
   name: 'generateYoutubeNotesPrompt',
   input: { schema: YoutubeNotesGeneratorInputSchema },
   output: { schema: YoutubeNotesGeneratorOutputSchema },
-  prompt: `You are an expert academic note-taker. Your task is to watch the educational video from the following URL and create a comprehensive set of study notes.
+  model: googleAI.model('gemini-1.5-flash'),
+  prompt: `You are an expert academic note-taker. Your task is to analyze the educational video provided and create a comprehensive set of study notes.
 
-**Video URL:** {{{videoUrl}}}
+**Video:** {{media url=videoUrl}}
 
 **Instructions:**
-1.  **Analyze the Full Video Transcript:** Imagine you have access to the full transcript of the video. Based on that, generate the following structured notes.
+1.  **Analyze the Full Video Content:** Based on the video, generate the following structured notes.
 2.  **Extract the Title:** Identify the main title of the video.
 3.  **Write a Summary:** Create a concise summary (3-4 sentences) that covers the main topics of the video.
 4.  **List Key Takeaways:** Identify and list 5-7 of the most critical points or takeaways.

@@ -1,19 +1,25 @@
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion } from 'lucide-react';
+import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
-  { href: '/tools/summary-generator', title: 'AI Summary Generator', description: 'Generate summaries from textbook photos or PDFs.', icon: BrainCircuit, },
-  { href: '/tools/flashcard-creator', title: 'Chapter-wise Flashcards', description: 'Instantly create flashcards from a photo of any chapter.', icon: FileText, },
-  { href: '/tools/formula-bank', title: 'Smart Formula Bank', description: 'Categorized formulas with explanations and derivations.', icon: Calculator, },
-  { href: '/tools/question-bank', title: 'AI Question Bank', description: 'Generate practice questions for any subject and exam type.', icon: FileQuestion, },
-  { href: '/tools/lab-record-generator', title: 'Lab Record Generator', description: 'Get AI-written practicals for your experiments.', icon: FlaskConical, },
-  { href: '/tools/study-timetable', title: 'Auto Study Timetable', description: 'Build a personalized study plan in seconds.', icon: Calendar, },
-  { href: '/tools/reference-analyzer', title: 'Reference Book Analyzer', description: 'Analyze books and get AI-generated video explanations.', icon: BookOpen, },
-  { href: '/tools/doubt-locker', title: 'Doubt Locker', description: 'Get instant answers to your study questions.', icon: Lightbulb, },
-  { href: '/tools/math-solver', title: 'Math & Chemistry Solver', description: 'Scan and solve equations with step-by-step logic.', icon: Calculator, },
+  { href: '/tools/summary-generator', label: 'AI Summary Generator', icon: BrainCircuit, description: "Generate summaries from text or images." },
+  { href: '/tools/flashcard-creator', label: 'Flashcards Creator', icon: FileText, description: "Instantly create flashcards from any chapter." },
+  { href: '/tools/question-bank', label: 'Exam Booster Pack', icon: Shield, description: "Generate custom mock tests for any exam." },
+  { href: '/tools/doubt-locker', label: 'Doubt Solver Bot', icon: Bot, description: "Get step-by-step solutions via text or image." },
+  { href: '/tools/formula-bank', label: 'Formula Bank', icon: BookCopy, description: "Dynamic formula library with visual explanations." },
+  { href: '/tools/study-timetable', label: 'Smart Planner', icon: Zap, description: "Auto-generate study plans with AI suggestions." },
+  { href: '/tools/math-solver', label: 'Math & Chemistry Solver', icon: Calculator, description: "Scan and solve equations with step-by-step logic." },
+  { href: '/tools/time-tracker', label: 'Study Time Tracker', icon: Timer, description: "Track study sessions with a Pomodoro timer." },
+  { href: '/tools/homework-organizer', label: 'Homework Auto-Organizer', icon: FolderKanban, description: "Scan and categorize homework with AI." },
+  { href: '/tools/mindmap-generator', label: 'Mindmap Generator', icon: Network, description: "Convert notes into visual mind maps." },
+  { href: '/tools/flashcard-battle', label: 'Flashcard Battle Mode', icon: Swords, description: "Gamify revision with solo or multiplayer battles." },
+  { href: '/tools/voice-notes', label: 'Voice-to-Note Generator', icon: Languages, description: "Transcribe and summarize spoken notes." },
+  { href: '/tools/revision-coach', label: 'Revision Reminder AI Coach', icon: BellRing, description: "Get smart revision reminders based on science." },
+  { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical, description: "Get AI-written practicals for your experiments." },
+  { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen, description: "Analyze books and get AI-generated Q&A." },
 ];
 
 export default function DashboardPage() {
@@ -31,7 +37,7 @@ export default function DashboardPage() {
                 <CardHeader>
                   <CardTitle className="font-headline text-xl flex items-center gap-3">
                     <feature.icon className="w-6 h-6 text-accent" />
-                    {feature.title}
+                    {feature.label}
                   </CardTitle>
                   <CardDescription>{feature.description}</CardDescription>
                 </CardHeader>

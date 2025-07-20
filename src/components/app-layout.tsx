@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -24,13 +24,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const calculators = [
     { href: '/tools/summary-generator', label: 'AI Summary Generator', icon: BrainCircuit },
     { href: '/tools/flashcard-creator', label: 'Flashcards Creator', icon: FileText },
-    { href: '/tools/formula-bank', label: 'Smart Formula Bank', icon: Calculator },
-    { href: '/tools/question-bank', label: 'AI Question Bank', icon: FileQuestion },
-    { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical },
-    { href: '/tools/study-timetable', label: 'Study Timetable', icon: Calendar },
-    { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen },
-    { href: '/tools/doubt-locker', label: 'Doubt Locker', icon: Lightbulb },
+    { href: '/tools/question-bank', label: 'Exam Booster Pack', icon: Shield },
+    { href: '/tools/doubt-locker', label: 'Doubt Solver Bot', icon: Bot },
+    { href: '/tools/formula-bank', label: 'Formula Bank', icon: BookCopy },
+    { href: '/tools/study-timetable', label: 'Smart Planner', icon: Zap },
     { href: '/tools/math-solver', label: 'Math & Chemistry Solver', icon: Calculator },
+    { href: '/tools/time-tracker', label: 'Study Time Tracker', icon: Timer },
+    { href: '/tools/homework-organizer', label: 'Homework Auto-Organizer', icon: FolderKanban },
+    { href: '/tools/mindmap-generator', label: 'Mindmap Generator', icon: Network },
+    { href: '/tools/flashcard-battle', label: 'Flashcard Battle Mode', icon: Swords },
+    { href: '/tools/voice-notes', label: 'Voice-to-Note Generator', icon: Languages },
+    { href: '/tools/revision-coach', label: 'Revision Reminder AI Coach', icon: BellRing },
+    { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical },
+    { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

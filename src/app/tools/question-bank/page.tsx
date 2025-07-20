@@ -16,7 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { MCQ } from '@/components/mcq';
 import { Separator } from '@/components/ui/separator';
 
-const subjects = ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'History', 'Geography', 'Civics'];
+const subjects = ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'History', 'Geography', 'Civics', 'Economics', 'English', 'Computer Science'];
 
 export default function QuestionBankPage() {
   const { toast } = useToast();
@@ -26,7 +26,7 @@ export default function QuestionBankPage() {
   const [questionTypes, setQuestionTypes] = useState({
     mcq: true,
     short: true,
-    long: true,
+    long: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +88,7 @@ export default function QuestionBankPage() {
             <Separator />
             <div className="text-sm text-muted-foreground prose prose-invert max-w-none">
                 <p className='font-bold text-accent'>Answer:</p>
-                <div dangerouslySetInnerHTML={{ __html: q.answer.replace(/\n/g, '<br />') }} />
+                <div dangerouslySetInnerHTML={{ __html: q.answer.replace(/\\n/g, '<br />') }} />
             </div>
           </div>
         ))}
@@ -102,14 +102,14 @@ export default function QuestionBankPage() {
         <header className="flex items-center gap-4">
           <FileQuestion className="w-10 h-10 text-accent" />
           <div>
-            <h1 className="font-headline text-3xl md:text-4xl">AI-Generated Question Bank</h1>
-            <p className="text-muted-foreground mt-1">Generates questions with answers for any subject/chapter.</p>
+            <h1 className="font-headline text-3xl md:text-4xl">Exam Booster Pack</h1>
+            <p className="text-muted-foreground mt-1">Generate custom mock tests with answers for any subject/chapter.</p>
           </div>
         </header>
 
         <Card className="bg-secondary/30">
           <CardHeader>
-            <CardTitle>1. Define Your Question Bank</CardTitle>
+            <CardTitle>1. Define Your Mock Test</CardTitle>
             <CardDescription>Select a subject, topic, and the types of questions you want.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -146,11 +146,11 @@ export default function QuestionBankPage() {
              </div>
              <div className="space-y-2">
                 <Label htmlFor="q_count">Number of Questions (per type)</Label>
-                <Input id="q_count" type="number" value={questionCount} onChange={(e) => setQuestionCount(Math.max(1, parseInt(e.target.value, 10)))} min="1" max="50" />
+                <Input id="q_count" type="number" value={questionCount} onChange={(e) => setQuestionCount(Math.max(1, parseInt(e.target.value, 10)))} min="1" max="20" />
              </div>
              <Button onClick={handleGenerateQuestions} disabled={isLoading || !subject || !topic || !hasSelectedQuestionType} className="w-full text-lg py-6 shadow-glow hover:shadow-glow-sm transition-shadow">
               {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
-              Generate Questions
+              Generate Mock Test
             </Button>
           </CardContent>
         </Card>
@@ -160,7 +160,7 @@ export default function QuestionBankPage() {
                 <CardHeader>
                     <CardTitle className='font-headline text-2xl flex items-center gap-2'>
                         <FileQuestion className='text-accent'/>
-                        AI-Generated Questions for {topic}
+                        AI-Generated Mock Test for {topic}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -171,11 +171,11 @@ export default function QuestionBankPage() {
                         </div>
                     )}
                     {questionSet && (
-                        <Accordion type="multiple" defaultValue={['mcqs']} className="space-y-2">
+                        <Accordion type="multiple" defaultValue={['mcqs']} className="w-full space-y-2">
                            {questionSet.multipleChoiceQuestions && questionSet.multipleChoiceQuestions.length > 0 && (
-                               <AccordionItem value="mcqs">
-                                   <AccordionTrigger className="font-headline text-lg"><CheckSquare className="mr-2 text-accent"/>Multiple Choice Questions ({questionSet.multipleChoiceQuestions.length})</AccordionTrigger>
-                                   <AccordionContent className="space-y-4">
+                               <AccordionItem value="mcqs" className="bg-secondary/30 rounded-lg px-4 border-b-0">
+                                   <AccordionTrigger className="font-headline text-lg hover:no-underline"><CheckSquare className="mr-2 text-accent"/>Multiple Choice Questions ({questionSet.multipleChoiceQuestions.length})</AccordionTrigger>
+                                   <AccordionContent className="space-y-4 pt-4">
                                       {questionSet.multipleChoiceQuestions.map((q, i) => (
                                          <div key={i}>
                                             <MCQ {...q} questionNumber={i+1} />
@@ -186,10 +186,10 @@ export default function QuestionBankPage() {
                                </AccordionItem>
                            )}
                            {questionSet.shortAnswerQuestions && questionSet.shortAnswerQuestions.length > 0 && (
-                                <QuestionDisplay title="Short Answer Questions" questions={questionSet.shortAnswerQuestions} icon={Edit} questionNumberStart={questionSet.multipleChoiceQuestions?.length || 0 + 1} />
+                                <QuestionDisplay title="Short Answer Questions" questions={questionSet.shortAnswerQuestions} icon={Edit} questionNumberStart={1} />
                            )}
                            {questionSet.longAnswerQuestions && questionSet.longAnswerQuestions.length > 0 && (
-                                <QuestionDisplay title="Long Answer Questions" questions={questionSet.longAnswerQuestions} icon={MessageSquare} questionNumberStart={(questionSet.multipleChoiceQuestions?.length || 0) + (questionSet.shortAnswerQuestions?.length || 0) + 1} />
+                                <QuestionDisplay title="Long Answer Questions" questions={questionSet.longAnswerQuestions} icon={MessageSquare} questionNumberStart={1} />
                            )}
                         </Accordion>
                     )}

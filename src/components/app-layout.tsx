@@ -76,7 +76,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                            <GraduationCap className="size-4" />
                            <span>AI Tools</span>
                         </div>
-                        <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+                        <ChevronDown className="size-4 shrink-0 transition-transform duration-200 [&[data-state=open]]:-rotate-180" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent asChild>

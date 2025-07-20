@@ -51,15 +51,15 @@ const prompt = ai.definePrompt({
 - **Total Duration:** {{days}} days
 - **Daily Study Time:** {{hoursPerDay}} hours
 
-**Your Instructions:**
-1.  **Create a Title:** Generate a fitting title for this study plan.
-2.  **Break Down Subjects:** Logically break down the subjects into smaller, manageable topics or chapters that can be covered in daily study sessions.
-3.  **Create a Daily Schedule:** Generate a schedule for all {{days}} days.
+**CRITICAL INSTRUCTIONS:**
+1.  You **MUST** create a daily schedule that spans the **ENTIRE** duration of **{{days}}** days. Do not shorten the plan. You must provide a plan for every single day from 1 to {{days}}.
+2.  **Create a Title:** Generate a fitting title for this study plan.
+3.  **Break Down Subjects:** Logically break down the subjects into smaller, manageable topics or chapters that can be covered in daily study sessions.
 4.  **Allocate Sessions:** For each day, plan out study sessions. The number of sessions should be reasonable for the {{hoursPerDay}} hours of study. A typical session is 1.5 to 2 hours.
 5.  **Balance Subjects:** Ensure a good mix of subjects each day or each week to keep the student engaged and prevent burnout. Alternate between difficult and easier subjects if possible.
 6.  **Include Revision:** Strategically schedule revision days or sessions for topics already covered. For longer plans (over 7 days), dedicate at least one day a week for revision and buffer.
 7.  **Be Realistic:** The plan must be achievable. Don't cram too much into one day.
-8.  **Output Format:** Return the entire plan in the specified JSON format. Ensure you provide a plan for every single one of the {{days}} days.
+8.  **Output Format:** Return the entire plan in the specified JSON format. The 'schedule' array MUST contain exactly {{days}} entries.
 `,
 });
 
@@ -74,3 +74,4 @@ const generateTimetableFlow = ai.defineFlow(
     return output!;
   }
 );
+

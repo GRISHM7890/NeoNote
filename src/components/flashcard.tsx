@@ -14,7 +14,7 @@ export function Flashcard({ term, definition }: FlashcardProps) {
 
   return (
     <div className="flip-card h-48 w-full cursor-pointer group" onClick={() => setIsFlipped(!isFlipped)}>
-      <Card className={cn('flip-card-inner rounded-lg transition-transform duration-500 group-hover:scale-105', isFlipped && 'flipped')}>
+      <Card className={cn('flip-card-inner rounded-lg transition-transform duration-500 group-hover:scale-105', { 'flipped': isFlipped })}>
         <div className="flip-card-front rounded-lg bg-primary/20 border-primary/30">
           <h3 className="font-headline text-xl text-foreground">{term}</h3>
         </div>

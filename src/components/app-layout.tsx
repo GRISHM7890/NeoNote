@@ -38,7 +38,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical },
     { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen },
     { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked },
-    { href: '/tools/youtube-notes', label: 'Notes From YouTube', icon: Video },
     { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog },
     { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp },
     { href: '/tools/voice-commands', label: 'Voice-Activated Commands', icon: MicVocal },

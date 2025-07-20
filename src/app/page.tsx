@@ -2,7 +2,7 @@
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing } from 'lucide-react';
+import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -20,6 +20,10 @@ const features = [
   { href: '/tools/revision-coach', label: 'Revision Reminder AI Coach', icon: BellRing, description: "Get smart revision reminders based on science." },
   { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical, description: "Get AI-written practicals for your experiments." },
   { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen, description: "Analyze books and get AI-generated Q&A." },
+  { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked, description: "Get detailed solutions for any question." },
+  { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog, description: "Test your active recall with an AI examiner." },
+  { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp, description: "Visualize progress and get AI rank analysis." },
+  { href: '/tools/pdf-annotator', label: 'Smart PDF Annotator', icon: FilePenLine, description: "Chat with your documents and ask questions." },
 ];
 
 export default function DashboardPage() {

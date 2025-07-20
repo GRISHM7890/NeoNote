@@ -20,6 +20,8 @@ import '@/ai/flows/ai-solution-finder.ts';
 import '@/ai/flows/ai-blurt-processor.ts';
 import '@/ai/flows/ai-voice-note-processor.ts';
 import '@/ai/flows/ai-rank-simulator.ts';
+import '@/ai/flows/ai-pdf-analyzer.ts';
+
 
 
 

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, type ChangeEvent } from 'react';
+import React, { useState, type ChangeEvent } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

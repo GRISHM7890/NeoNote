@@ -12,6 +12,7 @@ import { Lightbulb, Loader2, Send, ImagePlus, User, Sparkles, BrainCircuit } fro
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 type Message = {
   role: 'user' | 'assistant';

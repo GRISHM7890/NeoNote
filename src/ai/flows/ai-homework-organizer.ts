@@ -11,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const OrganizeHomeworkInputSchema = z.object({
+const OrganizeHomeworkInputSchema = z.object({
   dueDate: z.string().describe('The due date for the homework in ISO 8601 format (e.g., YYYY-MM-DD).'),
   inputText: z.string().optional().describe('The text description of the homework assignment.'),
   photoDataUri: z.string().optional().describe(
@@ -20,7 +20,7 @@ export const OrganizeHomeworkInputSchema = z.object({
 });
 export type OrganizeHomeworkInput = z.infer<typeof OrganizeHomeworkInputSchema>;
 
-export const OrganizeHomeworkOutputSchema = z.object({
+const OrganizeHomeworkOutputSchema = z.object({
   subject: z.string().describe('The academic subject of the homework (e.g., "Physics", "History").'),
   taskSummary: z.string().describe('A concise, one-sentence summary of the main task.'),
   priority: z.enum(['High', 'Medium', 'Low']).describe('The priority level of the task based on its content and perceived effort.'),

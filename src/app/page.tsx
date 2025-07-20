@@ -14,7 +14,6 @@ const features = [
   { href: '/tools/reference-analyzer', title: 'Reference Book Analyzer', description: 'Analyze books and get AI-generated video explanations.', icon: BookOpen, },
   { href: '/tools/doubt-locker', title: 'Doubt Locker', description: 'Get instant answers to your study questions.', icon: Lightbulb, },
   { href: '/tools/math-solver', title: 'Math & Chemistry Solver', description: 'Scan and solve equations with step-by-step logic.', icon: Calculator, },
-  { href: '/tools/voice-notes', title: 'Voice Note Converter', description: 'Convert spoken lectures into formatted study notes.', icon: Mic, },
 ];
 
 export default function DashboardPage() {

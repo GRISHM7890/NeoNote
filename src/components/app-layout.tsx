@@ -31,7 +31,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen },
     { href: '/tools/doubt-locker', label: 'Doubt Locker', icon: Lightbulb },
     { href: '/tools/math-solver', label: 'Math & Chemistry Solver', icon: Calculator },
-    { href: '/tools/voice-notes', label: 'Voice Note Converter', icon: Mic },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

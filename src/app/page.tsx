@@ -1,3 +1,4 @@
+
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,6 @@ const features = [
   { href: '/tools/homework-organizer', label: 'Homework Auto-Organizer', icon: FolderKanban, description: "Scan and categorize homework with AI." },
   { href: '/tools/mindmap-generator', label: 'Mindmap Generator', icon: Network, description: "Convert notes into visual mind maps." },
   { href: '/tools/flashcard-battle', label: 'Flashcard Battle Mode', icon: Swords, description: "Gamify revision with solo or multiplayer battles." },
-  { href: '/tools/voice-notes', label: 'Voice-to-Note Generator', icon: Languages, description: "Transcribe and summarize spoken notes." },
   { href: '/tools/revision-coach', label: 'Revision Reminder AI Coach', icon: BellRing, description: "Get smart revision reminders based on science." },
   { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical, description: "Get AI-written practicals for your experiments." },
   { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen, description: "Analyze books and get AI-generated Q&A." },

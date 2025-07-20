@@ -1,3 +1,4 @@
+
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup } from '@/components/ui/sidebar';
@@ -33,7 +34,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/homework-organizer', label: 'Homework Auto-Organizer', icon: FolderKanban },
     { href: '/tools/mindmap-generator', label: 'Mindmap Generator', icon: Network },
     { href: '/tools/flashcard-battle', label: 'Flashcard Battle Mode', icon: Swords },
-    { href: '/tools/voice-notes', label: 'Voice-to-Note Generator', icon: Languages },
     { href: '/tools/revision-coach', label: 'Revision Reminder AI Coach', icon: BellRing },
     { href: '/tools/lab-record-generator', label: 'Lab Record Generator', icon: FlaskConical },
     { href: '/tools/reference-analyzer', label: 'Reference Analyzer', icon: BookOpen },

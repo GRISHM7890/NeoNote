@@ -4,18 +4,46 @@
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Library, Trash2 } from 'lucide-react';
+import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import 'katex/dist/katex.min.css';
+import { BlockMath } from 'react-katex';
+import { Flashcard } from '@/components/flashcard';
+import { MCQ } from '@/components/mcq';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { MindmapDisplay } from '@/components/mindmap';
+import type { GenerateFlashcardsOutput } from '@/ai/flows/ai-flashcard-generator';
+import type { GenerateSummaryOutput } from '@/ai/flows/ai-summary-generator';
+import type { GenerateQuestionsOutput } from '@/ai/flows/ai-question-generator';
+import type { GenerateFormulasOutput } from '@/ai/flows/ai-formula-generator';
+import type { GenerateTimetableOutput } from '@/ai/flows/ai-timetable-generator';
+import type { GenerateLabRecordOutput } from '@/ai/flows/ai-lab-record-generator';
+import type { ReferenceBookOutput } from '@/ai/flows/ai-reference-analyzer';
+import type { FindSolutionOutput } from '@/ai/flows/ai-solution-finder';
+import type { ProcessBlurtOutput } from '@/ai/flows/ai-blurt-processor';
+import type { SimulateRankOutput } from '@/ai/flows/ai-rank-simulator';
+import type { GenerateFocusAmbianceOutput } from '@/ai/flows/ai-focus-ambiance-generator';
+import type { MindmapNode } from '@/ai/flows/ai-mindmap-generator';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 // Define a union type for all possible library item payloads
-type LibraryItemPayload = any; // Using 'any' for simplicity, can be tightened later
+type LibraryItemPayload =
+  | GenerateFlashcardsOutput
+  | GenerateSummaryOutput
+  | { input: any; result: GenerateQuestionsOutput }
+  | { input: any; result: GenerateFormulasOutput }
+  | { input: any; result: GenerateTimetableOutput }
+  | { input: any; result: GenerateLabRecordOutput }
+  | { input: any; result: ReferenceBookOutput }
+  | { input: any; result: FindSolutionOutput }
+  | { input: any; result: ProcessBlurtOutput }
+  | { input: any; result: SimulateRankOutput }
+  | { input: any; result: GenerateFocusAmbianceOutput }
+  | { root: MindmapNode }
+  | any;
 
 export type LibraryItem = {
   id: string;
@@ -34,35 +62,193 @@ const getLibraryItems = (): LibraryItem[] => {
 };
 
 const saveLibraryItems = (items: LibraryItem[]) => {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem('synapse-library', JSON.stringify(items));
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('synapse-library', JSON.stringify(items));
 };
 
 
+// Individual display components for different library item types
+
+const FlashcardSetDisplay = ({ payload }: { payload: GenerateFlashcardsOutput }) => (
+    <Accordion type="multiple" defaultValue={['concepts', 'flashcards', 'mcqs']} className="w-full">
+        <AccordionItem value="concepts">
+            <AccordionTrigger>Core Concepts</AccordionTrigger>
+            <AccordionContent className="flex flex-wrap gap-2">
+                {payload.coreConcepts.map((concept, i) => <Badge key={i} variant="secondary">{concept}</Badge>)}
+            </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="flashcards">
+            <AccordionTrigger>Flashcards</AccordionTrigger>
+            <AccordionContent className="grid md:grid-cols-2 gap-4">
+                {payload.flashcards.map((card, i) => <Flashcard key={i} term={card.term} definition={card.definition} />)}
+            </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="mcqs">
+            <AccordionTrigger>Multiple Choice Questions</AccordionTrigger>
+            <AccordionContent className="space-y-4">
+                {payload.multipleChoiceQuestions.map((mcq, i) => (
+                    <div key={i}>
+                        <MCQ {...mcq} />
+                        {i < payload.multipleChoiceQuestions.length - 1 && <Separator className="my-4"/>}
+                    </div>
+                ))}
+            </AccordionContent>
+        </AccordionItem>
+    </Accordion>
+);
+
+const SummaryDisplay = ({ payload }: { payload: GenerateSummaryOutput }) => (
+    <div className="space-y-4">
+        {payload.title && <h3 className="font-bold text-lg text-primary">{payload.title}</h3>}
+        <div className="prose prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: payload.content.replace(/\n/g, '<br />') }} />
+        {payload.keywords && payload.keywords.length > 0 && (
+            <div>
+                <h4 className="font-semibold mb-2">Keywords</h4>
+                <div className="flex flex-wrap gap-2">
+                    {payload.keywords.map((kw, i) => <Badge key={i}>{kw}</Badge>)}
+                </div>
+            </div>
+        )}
+    </div>
+);
+
+const QuestionBankDisplay = ({ payload }: { payload: {result: GenerateQuestionsOutput} }) => (
+    <Accordion type="multiple" className="w-full">
+        {payload.result.multipleChoiceQuestions && (
+             <AccordionItem value="mcq"><AccordionTrigger>Multiple Choice</AccordionTrigger>
+             <AccordionContent className="space-y-4">
+                {payload.result.multipleChoiceQuestions.map((mcq, i) => <MCQ key={i} {...mcq} questionNumber={i+1}/>)}
+             </AccordionContent>
+             </AccordionItem>
+        )}
+        {payload.result.shortAnswerQuestions && (
+            <AccordionItem value="short"><AccordionTrigger>Short Answer</AccordionTrigger>
+            <AccordionContent className="space-y-4">
+                {payload.result.shortAnswerQuestions.map((q, i) => <div key={i} className="p-2 border rounded-md"><p className='font-semibold'>{i+1}. {q.question}</p><p className="text-sm text-muted-foreground">{q.answer}</p></div>)}
+            </AccordionContent>
+            </AccordionItem>
+        )}
+        {payload.result.longAnswerQuestions && (
+             <AccordionItem value="long"><AccordionTrigger>Long Answer</AccordionTrigger>
+             <AccordionContent className="space-y-4">
+                 {payload.result.longAnswerQuestions.map((q, i) => <div key={i} className="p-2 border rounded-md"><p className='font-semibold'>{i+1}. {q.question}</p><p className="text-sm text-muted-foreground">{q.answer}</p></div>)}
+             </AccordionContent>
+             </AccordionItem>
+        )}
+    </Accordion>
+);
+
+const FormulaBankDisplay = ({ payload }: { payload: {result: GenerateFormulasOutput}}) => (
+    <Accordion type="multiple" className="w-full">
+        {payload.result.formulas.map((item, i) => (
+            <AccordionItem key={i} value={`formula-${i}`}>
+                <AccordionTrigger>{item.name}</AccordionTrigger>
+                <AccordionContent className="space-y-2">
+                    <div className="text-lg"><BlockMath math={item.formula}/></div>
+                    <p className="text-muted-foreground">{item.explanation}</p>
+                    {item.derivation && <p className="text-sm text-muted-foreground">Derivation: {item.derivation.join(' ')}</p>}
+                </AccordionContent>
+            </AccordionItem>
+        ))}
+    </Accordion>
+)
+
+const TimetableDisplay = ({ payload }: { payload: {result: GenerateTimetableOutput}}) => (
+    <div className="max-h-96 overflow-y-auto">
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Day</TableHead>
+                    <TableHead>Focus</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {payload.result.schedule.map(day => (
+                    <TableRow key={day.day}>
+                        <TableCell>{day.day}</TableCell>
+                        <TableCell>{day.sessions.map(s => `${s.subject}: ${s.topic}`).join(', ')}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    </div>
+)
+
+const DefaultDisplay = ({ payload }: { payload: any }) => (
+    <pre className="whitespace-pre-wrap text-sm bg-background/50 p-4 rounded-md overflow-x-auto">
+        {JSON.stringify(payload, null, 2)}
+    </pre>
+);
+
 const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
-    return (
-        <Card className="bg-secondary/30">
-            <CardHeader>
-                <CardTitle className='text-xl font-headline'>{item.title}</CardTitle>
-                <CardDescription>
+  const renderContent = () => {
+    switch (item.type) {
+      case 'Flashcard Set':
+        return <FlashcardSetDisplay payload={item.payload} />;
+      case 'Summary':
+        return <SummaryDisplay payload={item.payload} />;
+      case 'Question Bank':
+        return <QuestionBankDisplay payload={item.payload} />;
+      case 'Formula Bank':
+        return <FormulaBankDisplay payload={item.payload} />;
+      case 'Mindmap':
+        return <div className="overflow-x-auto"><MindmapDisplay node={item.payload.root} /></div>;
+      case 'Study Timetable':
+        return <TimetableDisplay payload={item.payload} />;
+      // Add more cases here for other types as they are created
+      default:
+        return <DefaultDisplay payload={item.payload} />;
+    }
+  };
+
+  const Icon = {
+    'Flashcard Set': FileText,
+    'Summary': BrainCircuit,
+    'Question Bank': Shield,
+    'Formula Bank': BookCopy,
+    'Study Timetable': Zap,
+    'Math & Chemistry Solver': Calculator,
+    'Homework Auto-Organizer': FolderKanban,
+    'Mindmap': Network,
+    'Flashcard Battle': Swords,
+    'Revision Schedule': BellRing,
+    'Lab Record': FlaskConical,
+    'Reference Book Analysis': BookOpen,
+    'NCERT & Board Solution': BookMarked,
+    'Blurt Board Analysis': BrainCog,
+    'Progress Analysis': TrendingUp,
+    'Focus Ambiance': Leaf,
+  }[item.type] || Library;
+
+
+  return (
+    <Card className="bg-secondary/30 flex flex-col">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+                <Icon className="w-6 h-6 text-accent shrink-0 mt-1" />
+                <div>
+                    <CardTitle className='text-xl font-headline'>{item.title}</CardTitle>
+                    <CardDescription>
                     {item.type} &middot; {format(new Date(item.timestamp), 'd MMM, yyyy p')}
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                 <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                        <AccordionTrigger>View Content</AccordionTrigger>
-                        <AccordionContent>
-                           <pre className="whitespace-pre-wrap text-sm bg-background/50 p-4 rounded-md">
-                             {JSON.stringify(item.payload, null, 2)}
-                           </pre>
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion>
-            </CardContent>
-        </Card>
-    )
-}
+                    </CardDescription>
+                </div>
+            </div>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>View Content</AccordionTrigger>
+            <AccordionContent>
+              {renderContent()}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
+  );
+};
 
 
 export default function LibraryPage() {
@@ -73,8 +259,10 @@ export default function LibraryPage() {
   }, []);
 
   const clearLibrary = () => {
-    saveLibraryItems([]);
-    setLibraryItems([]);
+    if (confirm('Are you sure you want to delete all items from your library? This cannot be undone.')) {
+        saveLibraryItems([]);
+        setLibraryItems([]);
+    }
   };
 
 
@@ -98,7 +286,7 @@ export default function LibraryPage() {
 
         <main>
           {libraryItems.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {libraryItems.map(item => <LibraryItemDisplay key={item.id} item={item} />)}
             </div>
           ) : (

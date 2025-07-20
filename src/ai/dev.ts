@@ -18,6 +18,9 @@ import '@/ai/flows/ai-battle-question-generator.ts';
 import '@/ai/flows/ai-revision-scheduler.ts';
 import '@/ai/flows/ai-solution-finder.ts';
 import '@/ai/flows/ai-youtube-notes-generator.ts';
+import '@/ai/flows/ai-blurt-processor.ts';
+import '@/ai/flows/ai-voice-note-processor.ts';
+
 
 
 

@@ -5,3 +5,4 @@ import '@/ai/flows/ai-flashcard-generator.ts';
 import '@/ai/flows/image-to-text.ts';
 import '@/ai/flows/ai-summary-generator.ts';
 import '@/ai/flows/ai-formula-generator.ts';
+import '@/ai/flows/ai-question-generator.ts';

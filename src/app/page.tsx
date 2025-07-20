@@ -23,7 +23,6 @@ const features = [
   { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked, description: "Get detailed solutions for any question." },
   { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog, description: "Test your active recall with an AI examiner." },
   { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp, description: "Visualize progress and get AI rank analysis." },
-  { href: '/tools/pdf-annotator', label: 'Smart PDF Annotator', icon: FilePenLine, description: "Chat with your documents and ask questions." },
 ];
 
 export default function DashboardPage() {

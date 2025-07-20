@@ -40,7 +40,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/tools/ncert-solutions', label: 'NCERT & Board Solutions', icon: BookMarked },
     { href: '/tools/blurt-board', label: 'Blurt Board', icon: BrainCog },
     { href: '/tools/progress-tracker', label: 'Progress Graph Tracker', icon: TrendingUp },
-    { href: '/tools/pdf-annotator', label: 'Smart PDF Annotator', icon: FilePenLine },
     { href: '/tools/focus-mode', label: 'Focus Zen Mode', icon: Leaf },
   ];
 

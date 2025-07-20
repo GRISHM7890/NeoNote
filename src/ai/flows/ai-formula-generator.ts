@@ -11,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const GenerateFormulasInputSchema = z.object({
+const GenerateFormulasInputSchema = z.object({
   subject: z
     .string()
     .describe('The subject for which to generate formulas (e.g., "Physics").'),
@@ -28,7 +28,7 @@ const FormulaSchema = z.object({
   derivation: z.array(z.string()).optional().describe('A step-by-step derivation of the formula.'),
 });
 
-export const GenerateFormulasOutputSchema = z.object({
+const GenerateFormulasOutputSchema = z.object({
   formulas: z.array(FormulaSchema).describe('An array of generated formulas.'),
 });
 export type GenerateFormulasOutput = z.infer<typeof GenerateFormulasOutputSchema>;

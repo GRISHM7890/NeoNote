@@ -59,7 +59,7 @@ const solveDoubtFlow = ai.defineFlow(
   async (input) => {
     const { output } = await prompt(input);
     if (!output) {
-        throw new Error("The AI failed to generate a response. Please try again.");
+        throw new Error("The AI failed to generate a response that matched the required format. Please try rephrasing your question.");
     }
     return output;
   }

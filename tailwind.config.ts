@@ -12,6 +12,13 @@ export default {
       fontFamily: {
         body: ['var(--font-pt-sans)', 'sans-serif'],
         headline: ['var(--font-poppins)', 'sans-serif'],
+        'indie-flower': ['var(--font-indie-flower)', 'cursive'],
+        'caveat': ['var(--font-caveat)', 'cursive'],
+        'kalam': ['var(--font-kalam)', 'cursive'],
+        'patrick-hand': ['var(--font-patrick-hand)', 'cursive'],
+      },
+      backgroundImage: {
+        'ruled-paper': `linear-gradient(to bottom, transparent 0, transparent calc(1.5em - 1px), #aab3d8 1.5em), linear-gradient(to bottom, #e1e5f2 0px, #e1e5f2 1px, transparent 1px)`,
       },
       colors: {
         background: 'hsl(var(--background))',

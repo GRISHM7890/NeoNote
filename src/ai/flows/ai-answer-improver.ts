@@ -16,7 +16,7 @@ import { z } from 'genkit';
 
 // 1. Define Input/Output Schemas
 
-export const ImproveAnswerInputSchema = z.object({
+const ImproveAnswerInputSchema = z.object({
   question: z.string().describe("The original question the user was trying to answer."),
   userAnswer: z.string().describe("The user's written answer."),
   subject: z.string().describe("The academic subject (e.g., 'Physics', 'History')."),
@@ -26,7 +26,7 @@ export const ImproveAnswerInputSchema = z.object({
 export type ImproveAnswerInput = z.infer<typeof ImproveAnswerInputSchema>;
 
 
-export const ImproveAnswerOutputSchema = z.object({
+const ImproveAnswerOutputSchema = z.object({
   predictedScore: z.number().describe("The score the AI predicts the user's answer would receive."),
   strengths: z.array(z.string()).describe("A list of what the user did well in their answer."),
   areasForImprovement: z.array(z.string()).describe("A list of specific areas where the user's answer can be improved."),

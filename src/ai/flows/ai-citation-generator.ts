@@ -16,7 +16,7 @@ import { z } from 'genkit';
 
 // 1. Define Input/Output Schemas
 
-export const GenerateCitationsInputSchema = z.object({
+const GenerateCitationsInputSchema = z.object({
   text: z.string().describe("The block of text from which to generate citations. This text may mention books, articles, websites, etc."),
   style: z.enum(['MLA', 'APA', 'Chicago', 'Harvard']).describe("The desired citation style."),
 });
@@ -29,7 +29,7 @@ const CitationSchema = z.object({
   verificationNotes: z.string().describe("A brief note on how the AI verified the source or any assumptions made (e.g., 'Assumed publication year based on context', 'Verified author name via web search')."),
 });
 
-export const GenerateCitationsOutputSchema = z.object({
+const GenerateCitationsOutputSchema = z.object({
   citations: z.array(CitationSchema).describe('An array of all citations found and formatted from the text.'),
 });
 export type GenerateCitationsOutput = z.infer<typeof GenerateCitationsOutputSchema>;

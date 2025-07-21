@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { useTheme } from 'next-themes';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -32,11 +32,13 @@ export default function SettingsPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Component state for editing
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
+    // Load saved data from localStorage on initial mount
     const savedImage = localStorage.getItem('synapse-profile-image');
     if (savedImage) {
       setProfileImage(savedImage);
@@ -62,29 +64,36 @@ export default function SettingsPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         const dataUrl = reader.result as string;
+        // Update local state, don't save yet
         setProfileImage(dataUrl);
-        localStorage.setItem('synapse-profile-image', dataUrl);
-        toast({
-          title: 'Profile Picture Updated!',
-        });
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveImage = () => {
+    // Update local state, don't save yet
     setProfileImage(null);
-    localStorage.removeItem('synapse-profile-image');
-    toast({
-      title: 'Profile Picture Removed',
-    });
   };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value;
-    setName(newName);
-    localStorage.setItem('synapse-user-name', newName);
+    // Update local state, don't save yet
+    setName(e.target.value);
   };
+  
+  const handleSaveChanges = () => {
+    localStorage.setItem('synapse-user-name', name);
+    if (profileImage) {
+        localStorage.setItem('synapse-profile-image', profileImage);
+    } else {
+        localStorage.removeItem('synapse-profile-image');
+    }
+    toast({
+        title: 'Profile Saved!',
+        description: 'Your changes have been successfully saved.',
+    });
+  };
+
 
   if (!mounted) {
     return null; // or a loading skeleton
@@ -128,6 +137,9 @@ export default function SettingsPage() {
                         <Input id="name" value={name} onChange={handleNameChange} placeholder="Enter your name" />
                      </div>
                 </CardContent>
+                <CardFooter className="border-t px-6 py-4">
+                    <Button onClick={handleSaveChanges}>Save Changes</Button>
+                </CardFooter>
             </Card>
 
             <Card className="bg-secondary/30">

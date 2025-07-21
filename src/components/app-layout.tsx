@@ -16,9 +16,11 @@ import { Button } from './ui/button';
 
 type AppLayoutProps = {
   children: React.ReactNode;
+  inChat?: boolean;
+  onLeaveChat?: () => void;
 };
 
-const UserProfile = () => {
+const UserProfile = ({ inChat, onLeaveChat }: { inChat?: boolean, onLeaveChat?: () => void }) => {
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
 
@@ -58,16 +60,22 @@ const UserProfile = () => {
                      <Link href="/settings"><Settings className="mr-2"/> Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                   <LogOut className="mr-2"/> Log out
-                </DropdownMenuItem>
+                {inChat ? (
+                     <DropdownMenuItem onClick={onLeaveChat}>
+                        <LogOut className="mr-2"/> Leave Chat
+                    </DropdownMenuItem>
+                ) : (
+                    <DropdownMenuItem>
+                       <LogOut className="mr-2"/> Log out
+                    </DropdownMenuItem>
+                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );
 };
 
 
-export default function AppLayout({ children }: AppLayoutProps) {
+export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutProps) {
   const pathname = usePathname();
 
   const menuItems = [
@@ -170,20 +178,25 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </SidebarFooter>
         </Sidebar>
         <SidebarInset className="flex flex-col flex-1">
-          <header className="p-2 flex justify-between items-center border-b">
-            <div className="md:hidden">
-              <SidebarTrigger />
-            </div>
-            <div className="flex-1"></div>
-            <UserProfile />
-          </header>
+          { !inChat && (
+              <header className="p-2 flex justify-between items-center border-b">
+                <div className="md:hidden">
+                  <SidebarTrigger />
+                </div>
+                <div className="flex-1"></div>
+                <UserProfile />
+              </header>
+            )
+          }
           <div className="flex flex-col flex-1">
             <main className="flex-1">
               {children}
             </main>
-            <footer className="p-4 text-center text-xs text-muted-foreground">
-              © {new Date().getFullYear()} All Rights Reserved. Product Powered by PULXO INDUSTRIES.
-            </footer>
+            { !inChat && (
+              <footer className="p-4 text-center text-xs text-muted-foreground">
+                © {new Date().getFullYear()} All Rights Reserved. Product Powered by PULXO INDUSTRIES.
+              </footer>
+            )}
           </div>
         </SidebarInset>
       </div>

@@ -4,10 +4,8 @@
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
 import type { ProcessQrNoteOutput } from '@/ai/flows/ai-qr-note-processor';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { BrainCircuit, Key, Download, Loader2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, Download, XCircle } from 'lucide-react';
 import { Icons } from '@/components/icons';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -22,80 +20,99 @@ const getNoteFromLocalStorage = (id: string): NotePayload | null => {
   return notes[id] || null;
 };
 
-export default function NotePage() {
+export default function NoteDownloadPage() {
   const params = useParams();
   const [note, setNote] = useState<NotePayload | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<'loading' | 'generating' | 'downloading' | 'error'>('loading');
+  const [errorMessage, setErrorMessage] = useState('');
   const pdfRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const noteId = params.id as string;
     if (noteId) {
-      const storedNote = getNoteFromLocalStorage(noteId);
-      if (storedNote) {
-        setNote(storedNote);
-        setStatus('generating');
-        document.title = `Downloading Note: ${storedNote.title}`;
-      } else {
-        setError('Note not found. It may have been created on a different device or browser.');
-        setStatus('error');
+      try {
+        const storedNote = getNoteFromLocalStorage(noteId);
+        if (storedNote) {
+          setNote(storedNote);
+          setStatus('generating'); 
+          document.title = `Downloading Note: ${storedNote.title}`;
+        } else {
+          setErrorMessage('Note not found. It may have been created on another device or has been cleared from local storage.');
+          setStatus('error');
+        }
+      } catch (e) {
+         setErrorMessage('Could not retrieve the note. Local storage might be disabled or corrupted.');
+         setStatus('error');
       }
     }
   }, [params.id]);
 
   useEffect(() => {
     if (status === 'generating' && note && pdfRef.current) {
-        const generatePdf = async () => {
-            await new Promise(resolve => setTimeout(resolve, 50)); // Small delay for render
-            const canvas = await html2canvas(pdfRef.current!, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'px',
-                format: [canvas.width, canvas.height]
-            });
-            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-            const fileName = `${note.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
-            pdf.save(fileName);
-            setStatus('downloading');
+        const generateAndDownloadPdf = async () => {
+            await new Promise(resolve => setTimeout(resolve, 50)); 
+            
+            try {
+                const canvas = await html2canvas(pdfRef.current!, {
+                    scale: 2, // Higher scale for better quality
+                    useCORS: true, 
+                    backgroundColor: '#ffffff'
+                });
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'px',
+                    format: [canvas.width, canvas.height]
+                });
+                pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                const fileName = `${note.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`;
+                pdf.save(fileName);
+                setStatus('downloading');
+            } catch (pdfError) {
+                console.error("PDF generation failed:", pdfError);
+                setErrorMessage("Sorry, there was an error creating the PDF file.");
+                setStatus('error');
+            }
         };
-        generatePdf();
+        
+        generateAndDownloadPdf();
     }
   }, [status, note]);
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body p-4 flex items-center justify-center">
-      {/* Hidden div for PDF generation */}
+      {/* This div is rendered off-screen to generate the PDF from it */}
       {note && (
-        <div className="absolute top-0 left-0 -z-50" style={{ left: '-9999px' }}>
-          <div ref={pdfRef} className="p-8 bg-white text-black" style={{width: '600px'}}>
-             <div className="flex items-center gap-3 mb-4">
-                 <Icons.logo className="w-8 h-8 text-purple-600" />
-                 <h1 className="text-xl font-bold">Synapse Study Note</h1>
+        <div className="absolute top-0 -left-[9999px] w-[600px]" >
+          <div ref={pdfRef} className="p-8 bg-white text-black font-sans" style={{width: '600px', fontFamily: "Arial, sans-serif"}}>
+             <div style={{display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px"}}>
+                 <Icons.logo className="w-8 h-8" style={{color: "#8B5CF6"}}/>
+                 <h1 style={{fontSize: "20px", fontWeight: "bold"}}>Synapse Study Note</h1>
             </div>
-            <h2 className="text-3xl font-bold text-purple-700 mb-2">{note.title}</h2>
-            <p className="text-sm text-gray-500 mb-6">AI-generated summary from your notes.</p>
+            <h2 style={{fontSize: "28px", fontWeight: "bold", color: "#6D28D9", marginBottom: "8px"}}>{note.title}</h2>
+            <p style={{fontSize: "14px", color: "#6B7280", marginBottom: "24px"}}>AI-generated summary from your notes.</p>
             
-            <h3 className="font-bold text-lg mb-2 flex items-center gap-2">Summary</h3>
-            <p className="text-gray-700 mb-6">{note.summary}</p>
-            
-            <hr className="my-6" />
+            <hr style={{margin: "24px 0", borderColor: "#E5E7EB"}}/>
 
-            <h3 className="font-bold text-lg mb-2 flex items-center gap-2">Key Takeaways</h3>
-            <div className="flex flex-wrap gap-2">
+            <h3 style={{fontWeight: "bold", fontSize: "18px", marginBottom: "8px"}}>Summary</h3>
+            <p style={{color: "#4B5563", marginBottom: "24px", lineHeight: '1.6'}}>{note.summary}</p>
+            
+            <hr style={{margin: "24px 0", borderColor: "#E5E7EB"}}/>
+
+            <h3 style={{fontWeight: "bold", fontSize: "18px", marginBottom: "8px"}}>Key Takeaways</h3>
+            <div style={{display: "flex", flexWrap: "wrap", gap: "8px"}}>
                 {note.keyTakeaways.map(kw => (
-                    <span key={kw} className="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full">{kw}</span>
+                    <span key={kw} style={{backgroundColor: "#EDE9FE", color: "#5B21B6", fontSize: "14px", fontWeight: "500", padding: "4px 12px", borderRadius: "9999px"}}>{kw}</span>
                 ))}
             </div>
           </div>
         </div>
       )}
 
-      {/* Visible status card */}
+      {/* This is the visible status card for the user */}
       <Card className="max-w-md w-full text-center bg-secondary/50">
         <CardHeader>
-          <CardTitle className="text-2xl font-headline">Synapse Study Note</CardTitle>
+          <CardTitle className="text-2xl font-headline">Synapse Smart Note</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {status === 'loading' && (
@@ -107,20 +124,22 @@ export default function NotePage() {
           {status === 'generating' && (
             <>
               <Loader2 className="w-12 h-12 mx-auto animate-spin text-accent" />
-              <p className="text-muted-foreground">Generating your PDF, please wait...</p>
+              <p className="text-muted-foreground">Preparing your PDF, please wait...</p>
+              <p className="text-xs text-muted-foreground">The download will start automatically.</p>
             </>
           )}
           {status === 'downloading' && (
             <>
               <Download className="w-12 h-12 mx-auto text-green-500" />
               <p className="font-semibold text-foreground">Your PDF is downloading!</p>
-              <p className="text-muted-foreground text-sm">If the download doesn't start, please check your browser settings.</p>
+              <p className="text-muted-foreground text-sm">You can now close this window.</p>
             </>
           )}
           {status === 'error' && (
             <>
-              <CardTitle className="text-2xl text-destructive font-headline">Note Not Found</CardTitle>
-              <p className="text-muted-foreground">{error}</p>
+              <XCircle className="w-12 h-12 mx-auto text-destructive" />
+              <p className="font-semibold text-destructive">Download Failed</p>
+              <p className="text-muted-foreground text-sm">{errorMessage}</p>
             </>
           )}
         </CardContent>

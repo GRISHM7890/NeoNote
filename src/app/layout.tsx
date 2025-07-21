@@ -3,15 +3,22 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
-import { Manrope } from 'next/font/google';
+import { Poppins, PT_Sans } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 
-const manrope = Manrope({
+const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-manrope',
+  variable: '--font-poppins',
+  weight: ['400', '500', '600', '700', '800', '900']
 });
 
+const ptSans = PT_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-pt-sans',
+  weight: ['400', '700']
+});
 
 export const metadata: Metadata = {
   title: "Shreeya's AI",
@@ -25,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn('font-body antialiased min-h-screen bg-background', manrope.variable)}>
+      <body className={cn('font-body antialiased min-h-screen bg-background', poppins.variable, ptSans.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -38,4 +45,3 @@ export default function RootLayout({
       </body>
     </html>
   );
-}

@@ -7,7 +7,7 @@ import type { ProcessQrNoteOutput } from '@/ai/flows/ai-qr-note-processor';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Book, BrainCircuit, Key } from 'lucide-react';
+import { BrainCircuit, Key } from 'lucide-react';
 import { Icons } from '@/components/icons';
 
 type NotePayload = ProcessQrNoteOutput;
@@ -31,6 +31,7 @@ export default function NotePage() {
       const storedNote = getNoteFromLocalStorage(noteId);
       if (storedNote) {
         setNote(storedNote);
+        document.title = `${storedNote.title} | Synapse Study`;
       } else {
         setError('Note not found. Make sure you are using the same device and browser where the QR code was generated.');
       }
@@ -39,10 +40,10 @@ export default function NotePage() {
   
   if (error) {
      return (
-        <div className="flex items-center justify-center min-h-screen bg-background p-4">
+        <div className="flex items-center justify-center min-h-screen bg-background p-4 font-body">
             <Card className="max-w-lg w-full text-center bg-secondary/50">
                 <CardHeader>
-                    <CardTitle className="text-2xl text-destructive">Note Not Found</CardTitle>
+                    <CardTitle className="text-2xl text-destructive font-headline">Note Not Found</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground">{error}</p>
@@ -54,7 +55,7 @@ export default function NotePage() {
 
 
   if (!note) {
-    return <div className="flex items-center justify-center min-h-screen bg-background">Loading note...</div>;
+    return <div className="flex items-center justify-center min-h-screen bg-background font-body">Loading note...</div>;
   }
 
   return (
@@ -62,7 +63,7 @@ export default function NotePage() {
         <header className="p-4 border-b bg-secondary/30">
             <div className="container mx-auto flex items-center gap-3">
                  <Icons.logo className="w-8 h-8 text-accent" />
-                 <h1 className="text-xl font-headline">Shreeya's AI Note</h1>
+                 <h1 className="text-xl font-headline">Synapse Study Note</h1>
             </div>
         </header>
         <main className="container mx-auto p-4 md:p-8 max-w-4xl">

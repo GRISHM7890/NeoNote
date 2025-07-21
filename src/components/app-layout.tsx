@@ -2,7 +2,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, MessageCircle, Printer, QrCode, Music } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, QrCode, Music } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -107,7 +107,6 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/citation-generator', label: 'AI Citation Generator', icon: FilePenLine },
     { href: '/tools/handwriting-converter', label: 'Text-to-Handwriting Converter', icon: Printer },
     { href: '/tools/mood-music', label: 'Study Mood Music', icon: Music },
-    { href: '/tools/peer-chat', label: 'Peer Chatroom', icon: MessageCircle },
     { href: '/tools/answer-improver', label: 'AI Answer Improver', icon: Lightbulb },
     { href: '/tools/qr-generator', label: 'QR Code for Notes', icon: QrCode },
   ];

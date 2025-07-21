@@ -106,7 +106,6 @@ export default function PeerChatroomPage() {
             participants: [user]
         });
         
-        // Add welcome message from tutor
         await addDoc(collection(db, `chatrooms/${roomRef.id}/messages`), {
             ...getTutorMessage(topic, subject),
             timestamp: serverTimestamp()
@@ -187,6 +186,10 @@ export default function PeerChatroomPage() {
   const MessageBubble = ({ msg }: { msg: Message }) => {
     const isUser = msg.author.name === user.name;
     const isTutor = msg.author.name === 'AI Tutor';
+    
+    // Handle cases where timestamp might be null temporarily
+    const messageTime = msg.timestamp?.toDate() ? msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -206,8 +209,8 @@ export default function PeerChatroomPage() {
                 isTutor && "bg-accent/20 border border-accent/50"
             )}>
                 {!isUser && <p className={cn("text-xs font-bold", isTutor ? "text-accent" : "text-primary/80")}>{msg.author.name}</p>}
-                <p className="text-sm prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: msg.content }} />
-                {msg.timestamp && <p className="text-xs opacity-60 text-right mt-1">{msg.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>}
+                <p className="text-sm prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br />') }} />
+                {messageTime && <p className="text-xs opacity-60 text-right mt-1">{messageTime}</p>}
             </div>
              {isUser && (
                 <Avatar className="w-8 h-8">
@@ -324,3 +327,5 @@ export default function PeerChatroomPage() {
     </AppLayout>
   );
 }
+
+    

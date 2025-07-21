@@ -23,10 +23,10 @@ import '@/ai/flows/ai-rank-simulator.ts';
 import '@/ai/flows/ai-focus-ambiance-generator.ts';
 import '@/ai/flows/ai-answer-improver.ts';
 import '@/ai/flows/ai-citation-generator.ts';
-import '@/ai/flows/ai-qr-note-processor.ts';
 import '@/ai/flows/ai-music-recommender.ts';
 import '@/ai/flows/ai-language-translator.ts';
 import '@/ai/flows/ai-youtube-notes-generator.ts';
+
 
 
 

@@ -16,7 +16,7 @@ export default function NoteLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
         <body>
             {children}
         </body>

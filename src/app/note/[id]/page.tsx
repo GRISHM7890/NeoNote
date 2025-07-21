@@ -50,6 +50,7 @@ export default function NoteDownloadPage() {
   useEffect(() => {
     if (status === 'generating' && note && pdfRef.current) {
         const generateAndDownloadPdf = async () => {
+            // Brief delay to ensure the off-screen div is fully rendered
             await new Promise(resolve => setTimeout(resolve, 50)); 
             
             try {
@@ -80,11 +81,11 @@ export default function NoteDownloadPage() {
   }, [status, note]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-body p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-100 text-gray-800 font-sans p-4 flex items-center justify-center">
       {/* This div is rendered off-screen to generate the PDF from it */}
       {note && (
-        <div className="absolute top-0 -left-[9999px] w-[600px]" >
-          <div ref={pdfRef} className="p-8 bg-white text-black font-sans" style={{width: '600px', fontFamily: "Arial, sans-serif"}}>
+        <div className="absolute -left-[9999px] top-0 w-[600px]" >
+          <div ref={pdfRef} className="p-8 bg-white text-black" style={{width: '600px', fontFamily: "Arial, sans-serif"}}>
              <div style={{display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px"}}>
                  <Icons.logo className="w-8 h-8" style={{color: "#8B5CF6"}}/>
                  <h1 style={{fontSize: "20px", fontWeight: "bold"}}>Synapse Study Note</h1>
@@ -110,36 +111,36 @@ export default function NoteDownloadPage() {
       )}
 
       {/* This is the visible status card for the user */}
-      <Card className="max-w-md w-full text-center bg-secondary/50">
+      <Card className="max-w-md w-full text-center bg-white shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-headline">Synapse Smart Note</CardTitle>
+          <CardTitle className="text-2xl font-bold text-gray-800">Synapse Smart Note</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {status === 'loading' && (
             <>
-              <Loader2 className="w-12 h-12 mx-auto animate-spin text-accent" />
-              <p className="text-muted-foreground">Loading your note...</p>
+              <Loader2 className="w-12 h-12 mx-auto animate-spin text-purple-600" />
+              <p className="text-gray-600">Loading your note...</p>
             </>
           )}
           {status === 'generating' && (
             <>
-              <Loader2 className="w-12 h-12 mx-auto animate-spin text-accent" />
-              <p className="text-muted-foreground">Preparing your PDF, please wait...</p>
-              <p className="text-xs text-muted-foreground">The download will start automatically.</p>
+              <Loader2 className="w-12 h-12 mx-auto animate-spin text-purple-600" />
+              <p className="text-gray-600">Preparing your PDF, please wait...</p>
+              <p className="text-xs text-gray-500">The download will start automatically.</p>
             </>
           )}
           {status === 'downloading' && (
             <>
               <Download className="w-12 h-12 mx-auto text-green-500" />
-              <p className="font-semibold text-foreground">Your PDF is downloading!</p>
-              <p className="text-muted-foreground text-sm">You can now close this window.</p>
+              <p className="font-semibold text-gray-800">Your PDF is downloading!</p>
+              <p className="text-gray-600 text-sm">You can now close this window.</p>
             </>
           )}
           {status === 'error' && (
             <>
-              <XCircle className="w-12 h-12 mx-auto text-destructive" />
-              <p className="font-semibold text-destructive">Download Failed</p>
-              <p className="text-muted-foreground text-sm">{errorMessage}</p>
+              <XCircle className="w-12 h-12 mx-auto text-red-500" />
+              <p className="font-semibold text-red-600">Download Failed</p>
+              <p className="text-gray-600 text-sm">{errorMessage}</p>
             </>
           )}
         </CardContent>

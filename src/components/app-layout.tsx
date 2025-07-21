@@ -2,18 +2,70 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { ChevronDown } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThemeToggle } from './theme-toggle';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Button } from './ui/button';
 
 type AppLayoutProps = {
   children: React.ReactNode;
 };
+
+const UserProfile = () => {
+    const [name, setName] = useState('');
+    const [image, setImage] = useState('');
+
+    useEffect(() => {
+        const savedName = localStorage.getItem('synapse-user-name') || 'User';
+        const savedImage = localStorage.getItem('synapse-profile-image') || '';
+        setName(savedName);
+        setImage(savedImage);
+    }, []);
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                        <AvatarImage src={image} alt={name} />
+                        <AvatarFallback>
+                            <User/>
+                        </AvatarFallback>
+                    </Avatar>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                            Student
+                        </p>
+                    </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link href="/"><Home className="mr-2"/> Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                     <Link href="/settings"><Settings className="mr-2"/> Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                   <LogOut className="mr-2"/> Log out
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+};
+
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
@@ -112,8 +164,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </SidebarFooter>
         </Sidebar>
         <SidebarInset className="flex flex-col flex-1">
-          <header className="p-2 md:hidden">
-            <SidebarTrigger />
+          <header className="p-2 flex justify-between items-center border-b">
+            <div className="md:hidden">
+              <SidebarTrigger />
+            </div>
+            <div className="flex-1"></div>
+            <UserProfile />
           </header>
           <div className="flex flex-col flex-1">
             <main className="flex-1">

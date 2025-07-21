@@ -22,6 +22,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     { href: '/', label: 'Dashboard', icon: Home },
     { href: '/new', label: 'New Note', icon: PlusSquare },
     { href: '/library', label: 'My Library', icon: Library },
+    { href: '/settings', label: 'Settings', icon: Settings },
   ];
   
   const calculators = [

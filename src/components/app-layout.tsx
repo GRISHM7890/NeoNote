@@ -108,7 +108,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <header className="p-2 md:hidden">
             <SidebarTrigger />
           </header>
-          {children}
+          <div className="flex flex-col flex-1">
+            <main className="flex-1">
+              {children}
+            </main>
+            <footer className="p-4 text-center text-xs text-muted-foreground">
+              © {new Date().getFullYear()} All Rights Reserved. Product Powered by PULXO INDUSTRIES.
+            </footer>
+          </div>
         </SidebarInset>
       </div>
     </SidebarProvider>

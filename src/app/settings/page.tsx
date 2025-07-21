@@ -1,14 +1,14 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, ChangeEvent } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTheme } from 'next-themes';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Settings, Palette, Trash2, Moon, Sun, Monitor } from 'lucide-react';
+import { Settings, Palette, Trash2, Moon, Sun, Monitor, User } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,16 +22,23 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    const savedImage = localStorage.getItem('synapse-profile-image');
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
   }, []);
 
   const handleClearLibrary = () => {
@@ -40,8 +47,31 @@ export default function SettingsPage() {
         title: 'Library Cleared',
         description: 'All your saved items have been deleted.',
     });
-    // Optional: redirect or refresh to show the change
     router.refresh(); 
+  };
+  
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setProfileImage(dataUrl);
+        localStorage.setItem('synapse-profile-image', dataUrl);
+        toast({
+          title: 'Profile Picture Updated!',
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setProfileImage(null);
+    localStorage.removeItem('synapse-profile-image');
+    toast({
+      title: 'Profile Picture Removed',
+    });
   };
 
 
@@ -61,6 +91,28 @@ export default function SettingsPage() {
         </header>
 
         <div className="grid gap-8 max-w-2xl mx-auto">
+            <Card className="bg-secondary/30">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><User/> Profile</CardTitle>
+                    <CardDescription>Customize your public profile information.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center gap-6">
+                    <Avatar className="w-20 h-20">
+                        <AvatarImage src={profileImage || ''} alt="User profile picture" />
+                        <AvatarFallback>
+                            <User className="w-10 h-10" />
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="space-y-2">
+                        <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden"/>
+                        <Button onClick={() => fileInputRef.current?.click()}>Upload Picture</Button>
+                        {profileImage && (
+                          <Button variant="ghost" onClick={handleRemoveImage}>Remove</Button>
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
+
             <Card className="bg-secondary/30">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><Palette/> Appearance</CardTitle>

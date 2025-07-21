@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { QrCode, Loader2, Sparkles, Wand2, Download, Link as LinkIcon, Book } from 'lucide-react';
+import { QrCode, Loader2, Sparkles, Wand2, Download, LinkIcon, Book } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { processQrNote, type ProcessQrNoteInput, type ProcessQrNoteOutput } from '@/ai/flows/ai-qr-note-processor';
 import { Textarea } from '@/components/ui/textarea';
@@ -79,7 +79,7 @@ export default function QrGeneratorPage() {
   const handleCopyLink = () => {
     if (!result) return;
     navigator.clipboard.writeText(result.noteUrl);
-    toast({title: "Link Copied!", description: "The link to your note has been copied."})
+    toast({title: "Link Copied!", description: "A link to the PDF download page has been copied."})
   }
 
   return (
@@ -89,7 +89,7 @@ export default function QrGeneratorPage() {
           <QrCode className="w-10 h-10 text-accent" />
           <div>
             <h1 className="font-headline text-3xl md:text-4xl">AI QR Code Generator for Notes</h1>
-            <p className="text-muted-foreground mt-1">Generate smart QR codes that link physical notes to AI-powered digital summaries.</p>
+            <p className="text-muted-foreground mt-1">Generate QR codes that link to a downloadable PDF of your AI-powered notes.</p>
           </div>
         </header>
 
@@ -97,13 +97,13 @@ export default function QrGeneratorPage() {
           <Card className="bg-secondary/30">
             <CardHeader>
               <CardTitle>1. Paste Your Notes</CardTitle>
-              <CardDescription>Provide the text you want the QR code to link to. The AI will summarize it.</CardDescription>
+              <CardDescription>Provide the text to be summarized. The AI will format it into a PDF linked by the QR code.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Textarea
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Paste the notes or content here... The AI will create a smart summary and link it to the QR code."
+                placeholder="Paste the notes or content here..."
                 rows={12}
               />
               <Button onClick={handleGenerate} disabled={isLoading || !inputText} className="w-full text-lg py-6 shadow-glow hover:shadow-glow-sm transition-shadow">
@@ -117,7 +117,7 @@ export default function QrGeneratorPage() {
             <Card className='animate-in fade-in duration-500 sticky top-8'>
                 <CardHeader>
                     <CardTitle className='font-headline text-2xl'>2. Your Generated QR Note</CardTitle>
-                     <CardDescription>Download the QR code to use in your physical notes.</CardDescription>
+                     <CardDescription>Download the QR code. Scanning it will download a PDF of the note.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {isLoading && (
@@ -130,7 +130,7 @@ export default function QrGeneratorPage() {
                         <div className="flex flex-col md:flex-row gap-6 items-center">
                             <div className="flex-shrink-0 text-center space-y-2">
                                 <img src={result.qrCodeUrl} alt="Generated QR Code" className="w-40 h-40 rounded-lg border p-1 bg-white mx-auto"/>
-                                <Button onClick={handleDownload} size="sm" variant="outline"><Download className="mr-2"/> Download</Button>
+                                <Button onClick={handleDownload} size="sm" variant="outline"><Download className="mr-2"/> Download QR</Button>
                                 <Button onClick={handleCopyLink} size="sm" variant="ghost"><LinkIcon className="mr-2"/> Copy Link</Button>
                             </div>
                             <div className="border-l-0 md:border-l pl-0 md:pl-6 w-full">

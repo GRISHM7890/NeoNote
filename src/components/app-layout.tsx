@@ -108,7 +108,6 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/handwriting-converter', label: 'Text-to-Handwriting Converter', icon: Printer },
     { href: '/tools/mood-music', label: 'Study Mood Music', icon: Music },
     { href: '/tools/answer-improver', label: 'AI Answer Improver', icon: Lightbulb },
-    { href: '/tools/qr-generator', label: 'QR Code for Notes', icon: QrCode },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

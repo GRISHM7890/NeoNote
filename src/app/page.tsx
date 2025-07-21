@@ -2,7 +2,7 @@
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf, Music, Printer, QrCode } from 'lucide-react';
+import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf, Music, Printer } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -28,7 +28,6 @@ const features = [
     { href: '/tools/handwriting-converter', label: 'Text-to-Handwriting Converter', icon: Printer, description: "Convert typed notes into realistic, printable handwriting." },
     { href: '/tools/mood-music', label: 'Study Mood Music', icon: Music, description: "Curated playlists of focus-enhancing music." },
     { href: '/tools/answer-improver', label: 'AI Answer Improver', icon: Lightbulb, description: "Get AI suggestions to improve your written answers." },
-    { href: '/tools/qr-generator', label: 'QR Code for Notes', icon: QrCode, description: "Generate QR codes to link physical and digital notes." },
 ];
 
 export default function DashboardPage() {

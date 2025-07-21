@@ -23,6 +23,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
@@ -32,12 +33,17 @@ export default function SettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [name, setName] = useState<string>('');
 
   useEffect(() => {
     setMounted(true);
     const savedImage = localStorage.getItem('synapse-profile-image');
     if (savedImage) {
       setProfileImage(savedImage);
+    }
+    const savedName = localStorage.getItem('synapse-user-name');
+    if (savedName) {
+      setName(savedName);
     }
   }, []);
 
@@ -74,6 +80,11 @@ export default function SettingsPage() {
     });
   };
 
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value;
+    setName(newName);
+    localStorage.setItem('synapse-user-name', newName);
+  };
 
   if (!mounted) {
     return null; // or a loading skeleton
@@ -96,20 +107,26 @@ export default function SettingsPage() {
                     <CardTitle className="flex items-center gap-2"><User/> Profile</CardTitle>
                     <CardDescription>Customize your public profile information.</CardDescription>
                 </CardHeader>
-                <CardContent className="flex items-center gap-6">
-                    <Avatar className="w-20 h-20">
-                        <AvatarImage src={profileImage || ''} alt="User profile picture" />
-                        <AvatarFallback>
-                            <User className="w-10 h-10" />
-                        </AvatarFallback>
-                    </Avatar>
-                    <div className="space-y-2">
-                        <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden"/>
-                        <Button onClick={() => fileInputRef.current?.click()}>Upload Picture</Button>
-                        {profileImage && (
-                          <Button variant="ghost" onClick={handleRemoveImage}>Remove</Button>
-                        )}
+                <CardContent className="space-y-4">
+                    <div className="flex items-center gap-6">
+                        <Avatar className="w-20 h-20">
+                            <AvatarImage src={profileImage || ''} alt="User profile picture" />
+                            <AvatarFallback>
+                                <User className="w-10 h-10" />
+                            </AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-2">
+                            <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden"/>
+                            <Button onClick={() => fileInputRef.current?.click()}>Upload Picture</Button>
+                            {profileImage && (
+                              <Button variant="ghost" onClick={handleRemoveImage}>Remove</Button>
+                            )}
+                        </div>
                     </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input id="name" value={name} onChange={handleNameChange} placeholder="Enter your name" />
+                     </div>
                 </CardContent>
             </Card>
 

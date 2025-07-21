@@ -55,7 +55,7 @@ const generateCitationsPrompt = ai.definePrompt({
 2.  **Extract Key Information:** For each source, extract as much information as possible: author(s), title, publication year, journal name, publisher, URL, etc.
 3.  **Verify & Format:**
     *   Use your knowledge to fill in any missing gaps if possible (e.g., a common book's publisher).
-    *   Format each identified source into a perfect citation according to the **{{{style}}}** style guide. Use HTML tags for formatting where necessary (e.g., `<i>` for titles in MLA/APA).
+    *   Format each identified source into a perfect citation according to the **{{{style}}}** style guide. Use HTML tags for formatting where necessary (e.g., \`<i>\` for titles in MLA/APA).
     *   This formatted string goes into the **formattedCitation** field.
 4.  **Add Verification Notes:** For each citation, provide a brief note in the **verificationNotes** field explaining your confidence or any assumptions made. For example: "Author and year were clearly stated," or "Could not verify publisher; using general information."
 5.  **Compile the List:** Add each completed citation object to the 'citations' array. If no sources are found, return an empty array.

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
 import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,6 +9,7 @@ import { Icons } from './icons';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
+import { ThemeToggle } from './theme-toggle';
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -103,6 +104,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
             </SidebarMenu>
           </SidebarContent>
+           <SidebarFooter>
+            <div className="flex items-center justify-center p-2 group-data-[collapsible=icon]:justify-start">
+              <ThemeToggle />
+            </div>
+          </SidebarFooter>
         </Sidebar>
         <SidebarInset className="flex flex-col flex-1">
           <header className="p-2 md:hidden">

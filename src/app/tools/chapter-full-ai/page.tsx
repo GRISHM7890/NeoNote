@@ -131,9 +131,9 @@ export default function ChapterFullAiPage() {
                   <TabsContent value="pyqs" className="p-2 bg-background/50 rounded-b-md border border-t-0 max-h-[60vh] overflow-y-auto">
                     <Accordion type="single" collapsible className="w-full">
                       {result.pyqs.map((item, index) => (
-                          <AccordionItem key={index} value={`item-${index}`}>
-                              <AccordionTrigger>
-                                <span className="text-left font-semibold">Q{index + 1}: {item.question}</span>
+                          <AccordionItem key={index} value={`item-${index}`} className="bg-background/30 rounded-lg border px-4">
+                              <AccordionTrigger className="text-left font-semibold hover:no-underline">
+                                Q{index + 1}: {item.question}
                               </AccordionTrigger>
                               <AccordionContent>
                                 <div className="prose prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br />') }} />

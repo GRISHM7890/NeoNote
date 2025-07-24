@@ -128,7 +128,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
           <SidebarHeader>
             <div className="flex items-center gap-2 p-2">
               <Icons.logo className="w-8 h-8 text-accent" />
-              <span className="font-headline text-lg group-data-[collapsible=icon]:hidden">Shreeya's AI</span>
+              <span className="font-headline text-lg group-data-[collapsible=icon]:hidden">Neonote</span>
             </div>
           </SidebarHeader>
           <SidebarContent>

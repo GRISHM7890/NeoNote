@@ -44,7 +44,7 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="flex-1 p-4 md:p-8">
         <header className="mb-8">
-          <h1 className="font-headline text-3xl md:text-4xl text-foreground">Welcome to Shreeya's AI</h1>
+          <h1 className="font-headline text-3xl md:text-4xl text-foreground">Welcome to Neonote</h1>
           <p className="text-muted-foreground mt-2">Your complete AI-powered study toolkit. Select a tool to get started.</p>
         </header>
         <main>

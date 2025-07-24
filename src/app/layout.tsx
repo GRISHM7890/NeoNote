@@ -48,7 +48,7 @@ const patrickHand = Patrick_Hand({
 
 
 export const metadata: Metadata = {
-  title: "Shreeya's AI",
+  title: "Neonote",
   description: 'An AI-powered study companion that transforms textbook pages into interactive notes.',
 };
 

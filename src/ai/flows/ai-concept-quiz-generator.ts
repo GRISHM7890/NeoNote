@@ -1,10 +1,10 @@
 
 'use server';
 /**
- * @fileOverview AI flow to generate conceptual questions from a block of text.
+ * @fileOverview AI flow to generate conceptual questions and model answers from a block of text.
  *
  * This flow is designed to help users test their deep understanding of their own notes
- * by generating open-ended, thought-provoking questions.
+ * by generating open-ended, thought-provoking questions and providing ideal answers.
  *
  * - generateConceptQuiz - The main function to orchestrate the quiz generation.
  * - GenerateConceptQuizInput - The input type for the flow.
@@ -21,9 +21,15 @@ const GenerateConceptQuizInputSchema = z.object({
   notes: z.string().describe("The user's study notes or a block of text to be analyzed."),
 });
 
+
+const QuizItemSchema = z.object({
+    question: z.string().describe("An open-ended, thought-provoking conceptual question based on the provided text."),
+    modelAnswer: z.string().describe("A comprehensive, ideal 'god-tier' answer to the question.")
+});
+
 export type GenerateConceptQuizOutput = z.infer<typeof GenerateConceptQuizOutputSchema>;
 const GenerateConceptQuizOutputSchema = z.object({
-  questions: z.array(z.string()).describe('An array of 3-5 open-ended conceptual questions based on the provided text.'),
+  questions: z.array(QuizItemSchema).describe('An array of 3-5 question-answer pairs.'),
 });
 
 // 2. Define the AI prompt for quiz generation
@@ -31,7 +37,7 @@ const generateQuizPrompt = ai.definePrompt({
   name: 'generateConceptQuizPrompt',
   input: { schema: GenerateConceptQuizInputSchema },
   output: { schema: GenerateConceptQuizOutputSchema },
-  prompt: `You are an expert educator who excels at creating insightful, open-ended conceptual questions. Your goal is to help students think critically about the material they've written.
+  prompt: `You are an expert educator who excels at creating insightful, open-ended conceptual questions and perfect model answers. Your goal is to help students think critically about the material they've written.
 
 **Source Material (Student's Notes):**
 ---
@@ -42,14 +48,14 @@ const generateQuizPrompt = ai.definePrompt({
 1.  Read the provided source material carefully.
 2.  Identify the core concepts, principles, and underlying themes.
 3.  Generate an array of 3 to 5 thought-provoking, open-ended questions that test for deep understanding, not just rote memorization.
-4.  The questions should encourage the student to explain, compare, contrast, or evaluate the concepts.
+4.  For EACH question you generate, you MUST also write a comprehensive, "god-tier" model answer. This answer should be what a top student would write in an exam, explaining the concept thoroughly.
+5.  The questions should encourage the student to explain, compare, contrast, or evaluate the concepts.
 
-**Example questions:**
-- "How does the process of photosynthesis directly relate to cellular respiration?"
-- "Explain the main political and economic factors that led to the fall of the Roman Empire."
-- "Based on these notes, what would be the likely outcome if the initial voltage were doubled?"
+**Example question/answer pair:**
+- "question": "How does the process of photosynthesis directly relate to cellular respiration?"
+- "modelAnswer": "Photosynthesis and cellular respiration are two fundamental processes that are essentially the reverse of each other. Photosynthesis uses carbon dioxide, water, and light energy to produce glucose (chemical energy) and oxygen. Cellular respiration, on the other hand, uses that glucose and oxygen to produce carbon dioxide, water, and ATP (usable cellular energy). They form a critical cycle where the outputs of one process are the inputs for the other, ensuring the continuous flow of energy through most ecosystems."
 
-Return the questions in the specified JSON format.
+Return the questions and their model answers in the specified JSON format.
 `,
 });
 

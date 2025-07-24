@@ -12,6 +12,7 @@ import { generateChapterFullPackage, type GenerateChapterFullPackageInput, type 
 import { Input } from '@/components/ui/input';
 import { saveLibraryItem } from '@/lib/library';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const boards = ['CBSE', 'ICSE', 'Maharashtra State Board', 'Other'];
 const classLevels = ['Class 9', 'Class 10', 'Class 11', 'Class 12'];
@@ -76,7 +77,10 @@ export default function ChapterFullAiPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
-              <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Subject (e.g., Physics)" />
+               <Select value={subject} onValueChange={setSubject}>
+                <SelectTrigger><SelectValue placeholder="Select Subject" /></SelectTrigger>
+                <SelectContent>{subjects.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+              </Select>
               <Input value={chapterName} onChange={(e) => setChapterName(e.target.value)} placeholder="Chapter Name (e.g., Light - Reflection)" />
             </div>
             <div className="grid md:grid-cols-2 gap-4">
@@ -124,15 +128,19 @@ export default function ChapterFullAiPage() {
                   <TabsContent value="notes" className="p-4 bg-background/50 rounded-b-md border border-t-0 max-h-[60vh] overflow-y-auto">
                      <div className="prose prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: result.notes.replace(/\n/g, '<br />') }} />
                   </TabsContent>
-                  <TabsContent value="pyqs" className="p-4 bg-background/50 rounded-b-md border border-t-0 max-h-[60vh] overflow-y-auto">
-                    <div className="space-y-4">
-                        {result.pyqs.map((item, index) => (
-                             <div key={index} className="p-4 border rounded-lg">
-                                <p className="font-semibold">{index + 1}. {item.question}</p>
-                                <div className="mt-2 pt-2 border-t text-muted-foreground prose prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br />') }} />
-                            </div>
-                        ))}
-                    </div>
+                  <TabsContent value="pyqs" className="p-2 bg-background/50 rounded-b-md border border-t-0 max-h-[60vh] overflow-y-auto">
+                    <Accordion type="single" collapsible className="w-full">
+                      {result.pyqs.map((item, index) => (
+                          <AccordionItem key={index} value={`item-${index}`}>
+                              <AccordionTrigger>
+                                <span className="text-left font-semibold">Q{index + 1}: {item.question}</span>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="prose prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: item.answer.replace(/\n/g, '<br />') }} />
+                              </AccordionContent>
+                          </AccordionItem>
+                      ))}
+                    </Accordion>
                   </TabsContent>
                 </Tabs>
               )}

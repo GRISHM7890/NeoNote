@@ -111,6 +111,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/language-translator', label: 'AI Language Translator', icon: Languages },
     { href: '/tools/voice-notes', label: 'AI Voice Note Converter', icon: Mic },
     { href: '/tools/youtube-notes', label: 'YouTube Video Notes', icon: Video },
+    { href: '/tools/concept-quizzer', label: 'Quick Concept Quizzer', icon: FileQuestion },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

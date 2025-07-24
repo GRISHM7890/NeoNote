@@ -31,6 +31,7 @@ const features = [
     { href: '/tools/language-translator', label: 'AI Language Translator', icon: Languages, description: "Translate your notes into regional languages." },
     { href: '/tools/voice-notes', label: 'AI Voice Note Converter', icon: Mic, description: "Convert spoken notes into formatted text." },
     { href: '/tools/youtube-notes', label: 'YouTube Video Notes', icon: Video, description: "Generate notes from any educational YouTube video." },
+    { href: '/tools/concept-quizzer', label: 'Quick Concept Quizzer', icon: FileQuestion, description: "Test your understanding with AI-generated conceptual questions." },
 ];
 
 export default function DashboardPage() {

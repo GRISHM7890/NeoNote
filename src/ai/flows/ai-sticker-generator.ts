@@ -3,8 +3,8 @@
 /**
  * @fileOverview AI flow to generate a pack of custom stickers based on a topic.
  *
- * This flow takes a topic, brainstorms sticker ideas, and then uses an image
- * generation model to create a set of downloadable stickers.
+ * This flow takes a topic and uses an image generation model to create a
+ * downloadable sticker sheet.
  *
  * - generateStickers - The main function to orchestrate the sticker generation.
  * - GenerateStickersInput - The input type for the flow.
@@ -23,54 +23,26 @@ const GenerateStickersInputSchema = z.object({
 
 export type GenerateStickersOutput = z.infer<typeof GenerateStickersOutputSchema>;
 const GenerateStickersOutputSchema = z.object({
-  stickerUrls: z.array(z.string().url()).describe("An array of data URI strings for the generated sticker images."),
+  stickerSheetUrl: z.string().url().describe("A data URI string for the generated sticker sheet image."),
 });
 
 
-// 2. Define AI flow to brainstorm sticker ideas first
-const stickerIdeaPrompt = ai.definePrompt({
-    name: 'stickerIdeaPrompt',
-    input: { schema: GenerateStickersInputSchema },
-    output: { schema: z.object({ ideas: z.array(z.string()).describe("A list of 4-6 simple, visually representable concepts for stickers related to the topic.") }) },
-    prompt: `You are a creative designer brainstorming ideas for a sticker pack.
-    
-    Topic: {{{topic}}}
-
-    Generate a list of 4 to 6 simple, concrete nouns or very short phrases that would make good, clear stickers related to this topic.
-    For example, for 'Photosynthesis', ideas could be 'Sun', 'Chloroplast', 'Water Molecule', 'Glucose Molecule'.
-    For 'Ancient Rome', ideas could be 'Colosseum', 'Roman Legionary Helmet', 'Gladius Sword', 'Laurel Wreath'.
-    
-    Keep the ideas simple and iconic.
-    `
-});
-
-
-// 3. Define the main flow
+// 2. Define the main flow
 export async function generateStickers(input: GenerateStickersInput): Promise<GenerateStickersOutput> {
   
-  // Step 1: Brainstorm ideas
-  const { output: ideaResult } = await stickerIdeaPrompt(input);
-  if (!ideaResult?.ideas || ideaResult.ideas.length === 0) {
-      throw new Error("Could not brainstorm any sticker ideas for this topic.");
-  }
+  const imagePrompt = `A sticker sheet of 6 cute, vector art stickers about '${input.topic}'. The stickers should be die-cut with a white border, on a simple light gray background. The art style should be flat, colorful, and suitable for a student's notebook.`;
   
-  // Step 2: Generate an image for each idea in parallel
-  const imagePromises = ideaResult.ideas.map(idea => {
-      const imagePrompt = `${idea}, flat vector icon, sticker style, white background, die-cut border`;
-      return ai.generate({
-          model: 'googleai/gemini-2.0-flash-preview-image-generation',
-          prompt: imagePrompt,
-          config: {
-              responseModalities: ['TEXT', 'IMAGE'],
-          },
-      });
+  const { media } = await ai.generate({
+      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      prompt: imagePrompt,
+      config: {
+          responseModalities: ['TEXT', 'IMAGE'],
+      },
   });
 
-  const results = await Promise.all(imagePromises);
+  if (!media?.url) {
+    throw new Error("The AI failed to generate a sticker sheet for this topic.");
+  }
   
-  const stickerUrls = results
-    .map(res => res.media?.url)
-    .filter((url): url is string => !!url);
-
-  return { stickerUrls };
+  return { stickerSheetUrl: media.url };
 }

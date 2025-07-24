@@ -11,26 +11,26 @@ import { generateStickers, type GenerateStickersInput, type GenerateStickersOutp
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 
-const StickerCard = ({ stickerUrl, index }: { stickerUrl: string, index: number }) => {
+const StickerSheetDisplay = ({ stickerUrl, topic }: { stickerUrl: string, topic: string }) => {
     const handleDownload = () => {
         const link = document.createElement('a');
         link.href = stickerUrl;
-        link.download = `sticker-${index + 1}.png`;
+        link.download = `sticker-sheet-${topic.replace(/\s+/g, '-')}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
 
     return (
-        <Card className="relative group bg-secondary/30">
-            <CardContent className="p-2 aspect-square flex items-center justify-center">
-                 <Image src={stickerUrl} alt={`Generated sticker ${index + 1}`} width={200} height={200} className="object-contain"/>
-            </CardContent>
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button onClick={handleDownload} variant="secondary">
-                    <Download className="mr-2"/> Download
+        <Card className="bg-secondary/30">
+            <CardContent className="p-4 space-y-4">
+                 <div className="aspect-square w-full relative rounded-lg overflow-hidden border">
+                    <Image src={stickerUrl} alt={`Generated sticker sheet for ${topic}`} layout="fill" objectFit="contain"/>
+                 </div>
+                 <Button onClick={handleDownload} className="w-full">
+                    <Download className="mr-2"/> Download Sticker Sheet
                 </Button>
-            </div>
+            </CardContent>
         </Card>
     );
 };
@@ -40,7 +40,7 @@ export default function StickerGeneratorPage() {
   const { toast } = useToast();
   const [topic, setTopic] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [stickers, setStickers] = useState<GenerateStickersOutput | null>(null);
+  const [result, setResult] = useState<GenerateStickersOutput | null>(null);
 
   const handleGenerate = async () => {
     if (!topic) {
@@ -48,13 +48,13 @@ export default function StickerGeneratorPage() {
       return;
     }
     setIsLoading(true);
-    setStickers(null);
+    setResult(null);
 
     const input: GenerateStickersInput = { topic };
 
     try {
-      const result = await generateStickers(input);
-      setStickers(result);
+      const aiResult = await generateStickers(input);
+      setResult(aiResult);
       toast({ title: 'Stickers Generated!', description: 'Your AI-powered sticker pack is ready.' });
     } catch (error) {
       console.error(error);
@@ -93,23 +93,21 @@ export default function StickerGeneratorPage() {
             </CardContent>
         </Card>
 
-        {(isLoading || stickers) && (
+        {(isLoading || result) && (
              <div className="animate-in fade-in duration-500">
-                <h2 className="font-headline text-2xl mb-4">Your Custom Sticker Pack</h2>
+                <h2 className="font-headline text-2xl mb-4">Your Custom Sticker Sheet</h2>
                 {isLoading && (
-                    <div className="flex items-center justify-center p-8 text-muted-foreground bg-secondary/30 rounded-lg">
+                    <div className="flex items-center justify-center p-8 text-muted-foreground bg-secondary/30 rounded-lg min-h-[300px]">
                         <Loader2 className="w-8 h-8 animate-spin mr-4" />
                         <p>The AI is illustrating your stickers... this may take a moment.</p>
                     </div>
                 )}
-                 {stickers?.stickerUrls && stickers.stickerUrls.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {stickers.stickerUrls.map((url, index) => (
-                           <StickerCard key={index} stickerUrl={url} index={index} />
-                        ))}
+                 {result?.stickerSheetUrl && (
+                    <div className="max-w-xl mx-auto">
+                        <StickerSheetDisplay stickerUrl={result.stickerSheetUrl} topic={topic}/>
                     </div>
                 )}
-                 {stickers && stickers.stickerUrls.length === 0 && !isLoading && (
+                 {result && !result.stickerSheetUrl && !isLoading && (
                     <div className="text-center text-muted-foreground py-10 bg-secondary/30 rounded-lg">
                         The AI was unable to generate stickers for this topic. Please try another one.
                     </div>

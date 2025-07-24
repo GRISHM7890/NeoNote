@@ -2,7 +2,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -115,6 +115,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/printable-view', label: 'Printable Flashcard View', icon: View },
     { href: '/tools/puzzle-game', label: 'Flashcard Puzzle Game', icon: Puzzle },
     { href: '/tools/daily-tip', label: 'Daily Smart Tip', icon: Star },
+    { href: '/tools/sticker-packs', label: 'Sticker Packs for Notes', icon: Smile },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

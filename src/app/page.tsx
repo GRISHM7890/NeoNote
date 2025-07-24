@@ -2,7 +2,7 @@
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf, Music, Printer, Video, Puzzle, MessageSquare, View, Star } from 'lucide-react';
+import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf, Music, Printer, Video, Puzzle, MessageSquare, View, Star, Smile } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -35,6 +35,7 @@ const features = [
     { href: '/tools/printable-view', label: 'Printable Flashcard View', icon: View, description: 'Display flashcards in a printable grid layout.'},
     { href: '/tools/puzzle-game', label: 'Flashcard Puzzle Game', icon: Puzzle, description: 'Turn flashcards into a fun matching game.'},
     { href: '/tools/daily-tip', label: 'Daily Smart Tip', icon: Star, description: 'Get a new study or memory tip every day.'},
+    { href: '/tools/sticker-packs', label: 'Sticker Packs for Notes', icon: Smile, description: 'Decorate notes with fun subject-based stickers.'},
 ];
 
 export default function DashboardPage() {

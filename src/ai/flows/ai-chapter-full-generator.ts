@@ -41,14 +41,14 @@ const summaryPrompt = ai.definePrompt({
   name: 'generateChapterSummaryPrompt',
   input: { schema: GenerateChapterFullPackageInputSchema },
   output: { schema: z.object({ summary: GenerateChapterFullPackageOutputSchema.shape.summary }) },
-  prompt: `You are a master educator AI. Generate a comprehensive yet concise summary for the following chapter:
+  prompt: `You are a master educator AI. Generate a deeply detailed, comprehensive summary for the following chapter. It should be long and thorough, equivalent to 2-3 pages of text, covering all main concepts, sub-topics, definitions, and key examples.
 
 - **Board:** {{{board}}}
 - **Class:** {{{className}}}
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
 
-Focus on covering all the main concepts in an easy-to-understand manner.`,
+Focus on creating an exhaustive summary that is easy to understand and can serve as a primary study document. Use markdown for clear formatting.`,
 });
 
 const notesPrompt = ai.definePrompt({
@@ -62,7 +62,7 @@ const notesPrompt = ai.definePrompt({
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
 
-Use Markdown for formatting: use headings, subheadings, bold keywords, and bullet points to make the notes easy to read and revise. The notes must be thorough enough for exam preparation.`,
+Use Markdown for formatting: use headings, subheadings, bold keywords, bullet points, and nested lists to make the notes easy to read and revise. The notes must be thorough enough for exam preparation.`,
 });
 
 const pyqsPrompt = ai.definePrompt({

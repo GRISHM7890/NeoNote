@@ -34,7 +34,7 @@ const features = [
     { href: '/tools/concept-quizzer', label: 'Quick Concept Quizzer', icon: FileQuestion, description: "Test your understanding with AI-generated conceptual questions." },
     { href: '/tools/printable-view', label: 'Printable Flashcard View', icon: View, description: 'Display flashcards in a printable grid layout.'},
     { href: '/tools/puzzle-game', label: 'Flashcard Puzzle Game', icon: Puzzle, description: 'Turn flashcards into a fun matching game.'},
-    { href: '/tools/daily-tip', label: 'Daily Smart Tip', icon: Star, description: 'Get a new study or memory tip every day.'},
+    { href: '/tools/daily-tip', label: 'Personalized Smart Tip', icon: Lightbulb, description: 'Get AI-powered advice for your study challenges.'},
     { href: '/tools/sticker-packs', label: 'Sticker Packs for Notes', icon: Smile, description: 'Decorate notes with fun subject-based stickers.'},
     { href: '/tools/multi-language-flashcards', label: 'Multi-Language Flashcard Creator', icon: Languages, description: 'Create bilingual flashcards with AI translations.'},
 ];

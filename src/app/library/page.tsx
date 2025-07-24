@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle, Music, Youtube, Diagram } from 'lucide-react';
+import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle, Music, Youtube, GitGraph } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -332,7 +332,7 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
     'Concept Quiz': HelpCircle,
     'Sticker Pack': Sticker,
     'Music Recommendations': Music,
-    'Diagram': Diagram,
+    'Diagram': GitGraph,
   }[item.type] || Library;
 
 

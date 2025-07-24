@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Diagram, Loader2, Sparkles, Download } from 'lucide-react';
+import { GitGraph, Loader2, Sparkles, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateDiagram, type GenerateDiagramInput, type GenerateDiagramOutput } from '@/ai/flows/ai-diagram-generator';
 import { Input } from '@/components/ui/input';
@@ -78,7 +78,7 @@ export default function DiagramGeneratorPage() {
     <AppLayout>
       <div className="flex-1 p-4 md:p-8 space-y-8">
         <header className="flex items-center gap-4">
-          <Diagram className="w-10 h-10 text-accent" />
+          <GitGraph className="w-10 h-10 text-accent" />
           <div>
             <h1 className="font-headline text-3xl md:text-4xl">Any Subject Diagram Generator</h1>
             <p className="text-muted-foreground mt-1">Generate a visually appealing diagram for any topic.</p>

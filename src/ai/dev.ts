@@ -31,4 +31,3 @@ import '@/ai/flows/ai-timetable-generator.ts';
 import '@/ai/flows/ai-reference-analyzer.ts';
 import '@/ai/flows/ai-homework-organizer.ts';
 import '@/ai/flows/ai-concept-quiz-generator.ts';
-

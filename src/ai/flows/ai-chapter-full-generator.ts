@@ -32,7 +32,7 @@ export type GenerateChapterFullPackageOutput = z.infer<typeof GenerateChapterFul
 const GenerateChapterFullPackageOutputSchema = z.object({
   summary: z.string().describe("A comprehensive yet concise summary of the entire chapter."),
   notes: z.string().describe("Detailed, high-quality, well-structured notes for the chapter, formatted using markdown for clarity (headings, bold, bullet points)."),
-  pyqs: z.array(PYQSchema).describe("A list of 5-10 highly targeted Previous Year Questions (PYQs) relevant to the chapter, board, and class, complete with detailed answers."),
+  pyqs: z.array(PYQSchema).describe("A list of at least 50 highly targeted Previous Year Questions (PYQs) relevant to the chapter, board, and class, complete with detailed answers."),
 });
 
 // 2. Define specialized AI prompts for each part of the package
@@ -69,14 +69,14 @@ const pyqsPrompt = ai.definePrompt({
   name: 'generateChapterPyqsPrompt',
   input: { schema: GenerateChapterFullPackageInputSchema },
   output: { schema: z.object({ pyqs: GenerateChapterFullPackageOutputSchema.shape.pyqs }) },
-  prompt: `You are a master exam creator AI for the Indian education system. Generate a list of 5 to 10 highly relevant Previous Year Questions (PYQs) for the following chapter:
+  prompt: `You are a master exam creator AI for the Indian education system. Generate a large list of **at least 50** highly relevant Previous Year Questions (PYQs) for the following chapter:
 
 - **Board:** {{{board}}}
 - **Class:** {{{className}}}
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
 
-These questions should be ones that have frequently appeared in past exams or are of high importance. For EACH question, you MUST provide a detailed, accurate answer.`,
+These questions should be ones that have frequently appeared in past exams or are of high importance. For EACH question, you MUST provide a detailed, accurate answer. Do not stop until you have provided at least 50 questions and answers.`,
 });
 
 

@@ -18,7 +18,7 @@ import { z } from 'genkit';
 export type GenerateBilingualFlashcardsInput = z.infer<typeof GenerateBilingualFlashcardsInputSchema>;
 const GenerateBilingualFlashcardsInputSchema = z.object({
   topic: z.string().describe("The topic to generate flashcards about (e.g., 'Photosynthesis')."),
-  questionCount: z.number().int().min(3).max(15).describe("The number of flashcards to generate."),
+  questionCount: z.number().int().min(1).max(15).describe("The number of flashcards to generate."),
   targetLanguage: z.string().describe("The language to translate the cards into (e.g., 'Hindi', 'Spanish')."),
 });
 

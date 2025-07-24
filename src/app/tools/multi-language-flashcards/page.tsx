@@ -90,8 +90,8 @@ export default function MultiLanguageFlashcardsPage() {
                         id="q_count" 
                         type="number" 
                         value={questionCount} 
-                        onChange={(e) => setQuestionCount(Math.max(3, parseInt(e.target.value, 10)))} 
-                        min="3" 
+                        onChange={(e) => setQuestionCount(Math.max(1, parseInt(e.target.value, 10)))} 
+                        min="1" 
                         max="15" 
                     />
                 </div>

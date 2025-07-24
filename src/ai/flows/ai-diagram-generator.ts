@@ -29,7 +29,7 @@ const GenerateDiagramOutputSchema = z.object({
 // 2. Define the main flow
 export async function generateDiagram(input: GenerateDiagramInput): Promise<GenerateDiagramOutput> {
   
-  const imagePrompt = `A clear, visually appealing, educational diagram of '${input.topic}'. The diagram should have clean lines, clear labels, and annotations suitable for a textbook or study material. The style should be modern and easy to understand. White background.`;
+  const imagePrompt = `A clear, visually appealing, educational diagram of '${input.topic}'. The diagram should have clean lines, clear and readable labels, and annotations suitable for a textbook or study material. The style should be a modern, simple, vector illustration. White background. The labels must be in legible English.`;
   
   try {
     const { media } = await ai.generate({

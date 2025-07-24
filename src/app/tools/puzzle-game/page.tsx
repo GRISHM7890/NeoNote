@@ -12,6 +12,7 @@ import { generateFlashcards, type GenerateFlashcardsOutput } from '@/ai/flows/ai
 import { DndContext, useDraggable, useDroppable, type DragEndEvent } from '@dnd-kit/core';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { saveLibraryItem } from '@/lib/library';
 
 type GameState = 'setup' | 'generating' | 'playing' | 'results';
 type FlashcardItem = { id: number; term: string; definition: string };
@@ -102,6 +103,12 @@ export default function PuzzleGamePage() {
             setScore(0);
             setTime(0);
             setGameState('playing');
+            saveLibraryItem({
+                type: 'Flashcard Set',
+                title: `Puzzle game cards for "${notes.substring(0, 20)}..."`,
+                payload: result,
+            });
+            toast({ title: "Puzzle Generated!", description: "The flashcards for this puzzle have been saved to your library."});
         } catch (error) {
             console.error(error);
             toast({ title: "Generation failed", variant: "destructive" });

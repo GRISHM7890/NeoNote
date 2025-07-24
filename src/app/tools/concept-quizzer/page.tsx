@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateConceptQuiz, type GenerateConceptQuizInput, type GenerateConceptQuizOutput } from '@/ai/flows/ai-concept-quiz-generator';
 import { Textarea } from '@/components/ui/textarea';
 import { AnimatePresence, motion } from 'framer-motion';
+import { saveLibraryItem } from '@/lib/library';
 
 export default function ConceptQuizzerPage() {
   const { toast } = useToast();
@@ -44,7 +45,12 @@ export default function ConceptQuizzerPage() {
         toast({ title: 'No Questions Generated', description: 'The AI could not create questions from the provided text. Please try with more detailed notes.', variant: 'destructive' });
       } else {
         setResult(aiResult);
-        toast({ title: 'Quiz Generated!', description: 'Your conceptual questions are ready.' });
+        saveLibraryItem({
+            type: 'Concept Quiz',
+            title: `Quiz for "${notes.substring(0, 30)}..."`,
+            payload: { input, result: aiResult },
+        });
+        toast({ title: 'Quiz Generated!', description: 'Your conceptual questions are ready and saved to your library.' });
       }
     } catch (error) {
       console.error(error);

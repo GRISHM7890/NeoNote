@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateStickers, type GenerateStickersInput, type GenerateStickersOutput } from '@/ai/flows/ai-sticker-generator';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
+import { saveLibraryItem } from '@/lib/library';
 
 const StickerSheetDisplay = ({ stickerUrl, topic }: { stickerUrl: string, topic: string }) => {
     const handleDownload = () => {
@@ -56,7 +57,12 @@ export default function StickerGeneratorPage() {
       const aiResult = await generateStickers(input);
       setResult(aiResult);
       if(aiResult.stickerSheetUrl) {
-        toast({ title: 'Stickers Generated!', description: 'Your AI-powered sticker pack is ready.' });
+        saveLibraryItem({
+            type: 'Sticker Pack',
+            title: `Stickers for ${topic}`,
+            payload: { input, result: aiResult },
+        });
+        toast({ title: 'Stickers Generated!', description: 'Your AI-powered sticker pack is ready and saved to your library.' });
       } else {
         toast({ title: 'Generation Failed', description: "The AI couldn't create stickers for this topic. Please try a different one.", variant: 'destructive' });
       }

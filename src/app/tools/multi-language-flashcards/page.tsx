@@ -48,7 +48,7 @@ export default function MultiLanguageFlashcardsPage() {
         title: `Bilingual Flashcards for ${topic}`,
         payload: { input, result: aiResult },
       });
-      toast({ title: 'Bilingual Flashcards Generated!', description: `Your flashcards for ${topic} have been translated to ${targetLanguage}.` });
+      toast({ title: 'Bilingual Flashcards Generated!', description: `Your flashcards for ${topic} have been translated to ${targetLanguage} and saved to your library.` });
     } catch (error) {
       console.error(error);
       toast({ title: "Generation Failed", description: "The AI couldn't process your request. Please try again.", variant: 'destructive'});

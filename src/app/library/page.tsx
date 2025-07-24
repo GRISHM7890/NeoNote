@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf } from 'lucide-react';
+import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -28,6 +28,10 @@ import type { SimulateRankOutput } from '@/ai/flows/ai-rank-simulator';
 import type { GenerateFocusAmbianceOutput } from '@/ai/flows/ai-focus-ambiance-generator';
 import type { MindmapNode } from '@/ai/flows/ai-mindmap-generator';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import type { GenerateBilingualFlashcardsOutput } from '@/ai/flows/ai-bilingual-flashcard-generator';
+import type { GenerateConceptQuizOutput } from '@/ai/flows/ai-concept-quiz-generator';
+import type { GenerateStickersOutput } from '@/ai/flows/ai-sticker-generator';
+import Image from 'next/image';
 
 // Define a union type for all possible library item payloads
 type LibraryItemPayload =
@@ -43,6 +47,9 @@ type LibraryItemPayload =
   | { input: any; result: SimulateRankOutput }
   | { input: any; result: GenerateFocusAmbianceOutput }
   | { root: MindmapNode }
+  | { input: any; result: GenerateBilingualFlashcardsOutput }
+  | { input: any; result: GenerateConceptQuizOutput }
+  | { input: any; result: GenerateStickersOutput }
   | any;
 
 export type LibraryItem = {
@@ -71,29 +78,35 @@ const saveLibraryItems = (items: LibraryItem[]) => {
 
 const FlashcardSetDisplay = ({ payload }: { payload: GenerateFlashcardsOutput }) => (
     <Accordion type="multiple" defaultValue={['concepts', 'flashcards', 'mcqs']} className="w-full">
-        <AccordionItem value="concepts">
-            <AccordionTrigger>Core Concepts</AccordionTrigger>
-            <AccordionContent className="flex flex-wrap gap-2">
-                {payload.coreConcepts.map((concept, i) => <Badge key={i} variant="secondary">{concept}</Badge>)}
-            </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="flashcards">
-            <AccordionTrigger>Flashcards</AccordionTrigger>
-            <AccordionContent className="grid md:grid-cols-2 gap-4">
-                {payload.flashcards.map((card, i) => <Flashcard key={i} term={card.term} definition={card.definition} />)}
-            </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="mcqs">
-            <AccordionTrigger>Multiple Choice Questions</AccordionTrigger>
-            <AccordionContent className="space-y-4">
-                {payload.multipleChoiceQuestions.map((mcq, i) => (
-                    <div key={i}>
-                        <MCQ {...mcq} />
-                        {i < payload.multipleChoiceQuestions.length - 1 && <Separator className="my-4"/>}
-                    </div>
-                ))}
-            </AccordionContent>
-        </AccordionItem>
+        {payload.coreConcepts && (
+            <AccordionItem value="concepts">
+                <AccordionTrigger>Core Concepts</AccordionTrigger>
+                <AccordionContent className="flex flex-wrap gap-2">
+                    {payload.coreConcepts.map((concept, i) => <Badge key={i} variant="secondary">{concept}</Badge>)}
+                </AccordionContent>
+            </AccordionItem>
+        )}
+        {payload.flashcards && (
+            <AccordionItem value="flashcards">
+                <AccordionTrigger>Flashcards</AccordionTrigger>
+                <AccordionContent className="grid md:grid-cols-2 gap-4">
+                    {payload.flashcards.map((card, i) => <Flashcard key={i} term={card.term} definition={card.definition} />)}
+                </AccordionContent>
+            </AccordionItem>
+        )}
+        {payload.multipleChoiceQuestions && (
+            <AccordionItem value="mcqs">
+                <AccordionTrigger>Multiple Choice Questions</AccordionTrigger>
+                <AccordionContent className="space-y-4">
+                    {payload.multipleChoiceQuestions.map((mcq, i) => (
+                        <div key={i}>
+                            <MCQ {...mcq} />
+                            {i < payload.multipleChoiceQuestions.length - 1 && <Separator className="my-4"/>}
+                        </div>
+                    ))}
+                </AccordionContent>
+            </AccordionItem>
+        )}
     </Accordion>
 );
 
@@ -174,6 +187,53 @@ const TimetableDisplay = ({ payload }: { payload: {result: GenerateTimetableOutp
     </div>
 )
 
+const BilingualFlashcardDisplay = ({ payload }: { payload: {result: GenerateBilingualFlashcardsOutput, input: any }}) => (
+    <div className="space-y-4 max-h-[70vh] overflow-y-auto">
+        {payload.result.bilingualCards.map((bCard, index) => (
+            <div key={index} className="p-4 rounded-lg bg-background/50 border">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+                    <div>
+                        <h4 className="font-semibold text-sm text-muted-foreground">Source (English)</h4>
+                        <p className="font-bold">{bCard.sourceTerm}</p>
+                        <p className="text-sm">{bCard.sourceDefinition}</p>
+                    </div>
+                        <div className="border-t md:border-t-0 md:border-l md:pl-4 pt-2 md:pt-0">
+                        <h4 className="font-semibold text-sm text-muted-foreground">{payload.input.targetLanguage}</h4>
+                        <p className="font-bold text-primary">{bCard.translatedTerm}</p>
+                        <p className="text-sm">{bCard.translatedDefinition}</p>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+);
+
+const ConceptQuizDisplay = ({ payload }: { payload: {result: GenerateConceptQuizOutput }}) => (
+     <Accordion type="multiple" className="w-full">
+        {payload.result.questions.map((item, i) => (
+            <AccordionItem key={i} value={`item-${i}`}>
+                <AccordionTrigger><HelpCircle className="w-4 h-4 mr-2 text-accent"/>{item.question}</AccordionTrigger>
+                <AccordionContent>
+                    <p className="text-sm prose prose-sm prose-invert max-w-none">{item.modelAnswer}</p>
+                </AccordionContent>
+            </AccordionItem>
+        ))}
+    </Accordion>
+);
+
+const StickerPackDisplay = ({ payload }: { payload: {result: GenerateStickersOutput }}) => (
+    <div>
+        {payload.result.stickerSheetUrl ? (
+             <div className="aspect-square w-full relative rounded-lg overflow-hidden border">
+                <Image src={payload.result.stickerSheetUrl} alt={`Generated sticker sheet`} layout="fill" objectFit="contain"/>
+             </div>
+        ) : (
+            <p className="text-muted-foreground text-center">Sticker generation failed or no image was produced.</p>
+        )}
+    </div>
+);
+
+
 const DefaultDisplay = ({ payload }: { payload: any }) => (
     <pre className="whitespace-pre-wrap text-sm bg-background/50 p-4 rounded-md overflow-x-auto">
         {JSON.stringify(payload, null, 2)}
@@ -195,6 +255,12 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
         return <div className="overflow-x-auto"><MindmapDisplay node={item.payload.root} /></div>;
       case 'Study Timetable':
         return <TimetableDisplay payload={item.payload} />;
+      case 'Bilingual Flashcards':
+        return <BilingualFlashcardDisplay payload={item.payload} />;
+      case 'Concept Quiz':
+          return <ConceptQuizDisplay payload={item.payload} />;
+      case 'Sticker Pack':
+          return <StickerPackDisplay payload={item.payload} />;
       // Add more cases here for other types as they are created
       default:
         return <DefaultDisplay payload={item.payload} />;
@@ -218,6 +284,9 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
     'Blurt Board Analysis': BrainCog,
     'Progress Analysis': TrendingUp,
     'Focus Ambiance': Leaf,
+    'Bilingual Flashcards': Languages,
+    'Concept Quiz': HelpCircle,
+    'Sticker Pack': Sticker,
   }[item.type] || Library;
 
 
@@ -287,7 +356,7 @@ export default function LibraryPage() {
         <main>
           {libraryItems.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {libraryItems.map(item => <LibraryItemDisplay key={item.id} item={item} />)}
+              {libraryItems.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).map(item => <LibraryItemDisplay key={item.id} item={item} />)}
             </div>
           ) : (
             <div className="text-center text-muted-foreground py-20 border-2 border-dashed rounded-lg">

@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { saveLibraryItem } from '@/lib/library';
 
 type CardStyle = 'both' | 'front_only' | 'back_only';
 
@@ -61,7 +62,12 @@ export default function PrintableGridViewPage() {
         try {
             const result = await generateFlashcards({ notes, topic: 'Printable Flashcards' });
             setFlashcards(result.flashcards);
-            toast({ title: 'Flashcards Generated!', description: 'Your flashcards are ready to be printed.' });
+            saveLibraryItem({
+                type: 'Flashcard Set',
+                title: `Printable Flashcards for "${notes.substring(0, 30)}..."`,
+                payload: result,
+            });
+            toast({ title: 'Flashcards Generated!', description: 'Your flashcards are ready to be printed and have been saved to your library.' });
         } catch (error) {
             console.error(error);
             toast({ title: 'Generation Failed', variant: 'destructive' });

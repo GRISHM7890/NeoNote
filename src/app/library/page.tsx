@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle, Music, Youtube } from 'lucide-react';
+import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle, Music, Youtube, Diagram } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -34,6 +34,7 @@ import type { GenerateStickersOutput } from '@/ai/flows/ai-sticker-generator';
 import Image from 'next/image';
 import type { RecommendMusicOutput } from '@/ai/flows/ai-music-recommender';
 import Link from 'next/link';
+import type { GenerateDiagramOutput } from '@/ai/flows/ai-diagram-generator';
 
 // Define a union type for all possible library item payloads
 type LibraryItemPayload =
@@ -53,6 +54,7 @@ type LibraryItemPayload =
   | { input: any; result: GenerateConceptQuizOutput }
   | { input: any; result: GenerateStickersOutput }
   | { input: any; result: RecommendMusicOutput }
+  | { input: any; result: GenerateDiagramOutput }
   | any;
 
 export type LibraryItem = {
@@ -259,6 +261,18 @@ const MusicRecommendationsDisplay = ({ payload }: { payload: { result: Recommend
     </div>
 );
 
+const DiagramDisplay = ({ payload }: { payload: { result: GenerateDiagramOutput }}) => (
+    <div>
+        {payload.result.diagramUrl ? (
+             <div className="aspect-square w-full relative rounded-lg overflow-hidden border bg-white">
+                <Image src={payload.result.diagramUrl} alt={`Generated diagram`} layout="fill" objectFit="contain"/>
+             </div>
+        ) : (
+            <p className="text-muted-foreground text-center">Diagram generation failed or no image was produced.</p>
+        )}
+    </div>
+);
+
 
 const DefaultDisplay = ({ payload }: { payload: any }) => (
     <pre className="whitespace-pre-wrap text-sm bg-background/50 p-4 rounded-md overflow-x-auto">
@@ -289,6 +303,8 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
           return <StickerPackDisplay payload={item.payload} />;
       case 'Music Recommendations':
           return <MusicRecommendationsDisplay payload={item.payload} />;
+      case 'Diagram':
+        return <DiagramDisplay payload={item.payload} />;
       // Add more cases here for other types as they are created
       default:
         return <DefaultDisplay payload={item.payload} />;
@@ -316,6 +332,7 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
     'Concept Quiz': HelpCircle,
     'Sticker Pack': Sticker,
     'Music Recommendations': Music,
+    'Diagram': Diagram,
   }[item.type] || Library;
 
 

@@ -2,7 +2,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile, Sticker, BookText } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile, Sticker, BookText, Diagram } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -118,6 +118,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/sticker-packs', label: 'Sticker Packs for Notes', icon: Sticker },
     { href: '/tools/multi-language-flashcards', label: 'Multi-Language Flashcard Creator', icon: Languages },
     { href: '/tools/chapter-full-ai', label: 'Chapter Full AI', icon: BookText },
+    { href: '/tools/diagram-generator', label: 'Any Subject Diagram Generator', icon: Diagram },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

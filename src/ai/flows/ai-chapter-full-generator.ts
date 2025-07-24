@@ -41,14 +41,14 @@ const summaryPrompt = ai.definePrompt({
   name: 'generateChapterSummaryPrompt',
   input: { schema: GenerateChapterFullPackageInputSchema },
   output: { schema: z.object({ summary: GenerateChapterFullPackageOutputSchema.shape.summary }) },
-  prompt: `You are a master educator AI. Generate a deeply detailed, comprehensive summary for the following chapter. It should be long and thorough, equivalent to 2-3 pages of text, covering all main concepts, sub-topics, definitions, and key examples.
+  prompt: `You are a master educator AI. Your task is to generate a profoundly detailed, exhaustive, and comprehensive summary for the following chapter. This summary absolutely must be very long and thorough, equivalent to at least 3 pages of text. You must not leave any concept, sub-topic, definition, key example, or student pain-point behind. Cover everything.
 
 - **Board:** {{{board}}}
 - **Class:** {{{className}}}
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
 
-Focus on creating an exhaustive summary that is easy to understand and can serve as a primary study document. Use markdown for clear formatting.`,
+Focus on creating an exhaustive summary that covers every single aspect of the chapter, making it a primary study document. Use markdown for clear formatting.`,
 });
 
 const notesPrompt = ai.definePrompt({

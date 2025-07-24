@@ -116,6 +116,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/puzzle-game', label: 'Flashcard Puzzle Game', icon: Puzzle },
     { href: '/tools/daily-tip', label: 'Daily Smart Tip', icon: Star },
     { href: '/tools/sticker-packs', label: 'Sticker Packs for Notes', icon: Smile },
+    { href: '/tools/multi-language-flashcards', label: 'Multi-Language Flashcard Creator', icon: Languages },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');

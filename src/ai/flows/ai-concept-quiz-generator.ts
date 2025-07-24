@@ -55,7 +55,7 @@ const generateQuizPrompt = ai.definePrompt({
 - "question": "How does the process of photosynthesis directly relate to cellular respiration?"
 - "modelAnswer": "Photosynthesis and cellular respiration are two fundamental processes that are essentially the reverse of each other. Photosynthesis uses carbon dioxide, water, and light energy to produce glucose (chemical energy) and oxygen. Cellular respiration, on the other hand, uses that glucose and oxygen to produce carbon dioxide, water, and ATP (usable cellular energy). They form a critical cycle where the outputs of one process are the inputs for the other, ensuring the continuous flow of energy through most ecosystems."
 
-Return the questions and their model answers in the specified JSON format.
+Return the questions and their model answers in the specified JSON format. The final output must be a single JSON object with a key named "questions" which holds an array of question/answer objects.
 `,
 });
 

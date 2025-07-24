@@ -55,10 +55,14 @@ export default function StickerGeneratorPage() {
     try {
       const aiResult = await generateStickers(input);
       setResult(aiResult);
-      toast({ title: 'Stickers Generated!', description: 'Your AI-powered sticker pack is ready.' });
+      if(aiResult.stickerSheetUrl) {
+        toast({ title: 'Stickers Generated!', description: 'Your AI-powered sticker pack is ready.' });
+      } else {
+        toast({ title: 'Generation Failed', description: "The AI couldn't create stickers for this topic. Please try a different one.", variant: 'destructive' });
+      }
     } catch (error) {
       console.error(error);
-      toast({ title: "Generation Failed", description: "The AI couldn't create stickers for this topic. Please try again.", variant: 'destructive'});
+      toast({ title: "An Error Occurred", description: "Something went wrong. Please try again.", variant: 'destructive'});
     } finally {
       setIsLoading(false);
     }

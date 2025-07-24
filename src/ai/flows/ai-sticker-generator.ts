@@ -23,7 +23,7 @@ const GenerateStickersInputSchema = z.object({
 
 export type GenerateStickersOutput = z.infer<typeof GenerateStickersOutputSchema>;
 const GenerateStickersOutputSchema = z.object({
-  stickerSheetUrl: z.string().url().describe("A data URI string for the generated sticker sheet image."),
+  stickerSheetUrl: z.string().url().nullable().describe("A data URI string for the generated sticker sheet image, or null if generation failed."),
 });
 
 
@@ -32,17 +32,24 @@ export async function generateStickers(input: GenerateStickersInput): Promise<Ge
   
   const imagePrompt = `A sticker sheet of 6 cute, vector art stickers about '${input.topic}'. The stickers should be die-cut with a white border, on a simple light gray background. The art style should be flat, colorful, and suitable for a student's notebook.`;
   
-  const { media } = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-preview-image-generation',
-      prompt: imagePrompt,
-      config: {
-          responseModalities: ['TEXT', 'IMAGE'],
-      },
-  });
+  try {
+    const { media } = await ai.generate({
+        model: 'googleai/gemini-2.0-flash-preview-image-generation',
+        prompt: imagePrompt,
+        config: {
+            responseModalities: ['TEXT', 'IMAGE'],
+        },
+    });
 
-  if (!media?.url) {
-    throw new Error("The AI failed to generate a sticker sheet for this topic.");
+    if (!media?.url) {
+      // AI succeeded but returned no image, treat as failure
+      return { stickerSheetUrl: null };
+    }
+    
+    return { stickerSheetUrl: media.url };
+  } catch (error) {
+    console.error("Sticker generation AI call failed:", error);
+    // The entire AI call failed, return null
+    return { stickerSheetUrl: null };
   }
-  
-  return { stickerSheetUrl: media.url };
 }

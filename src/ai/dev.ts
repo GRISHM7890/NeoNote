@@ -32,3 +32,5 @@ import '@/ai/flows/ai-reference-analyzer.ts';
 import '@/ai/flows/ai-homework-organizer.ts';
 import '@/ai/flows/ai-concept-quiz-generator.ts';
 import '@/ai/flows/ai-smart-tip-generator.ts';
+import '@/ai/flows/ai-bilingual-flashcard-generator.ts';
+

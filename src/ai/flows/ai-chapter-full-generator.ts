@@ -15,7 +15,7 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
 // 1. Define Input/Output Schemas
-export const GenerateChapterFullPackageInputSchema = z.object({
+const GenerateChapterFullPackageInputSchema = z.object({
   chapterName: z.string().describe("The name of the chapter."),
   className: z.string().describe("The class or grade level (e.g., 'Class 10')."),
   subject: z.string().describe("The academic subject (e.g., 'Physics', 'History')."),
@@ -28,7 +28,7 @@ const PYQSchema = z.object({
     answer: z.string().describe("A detailed, correct answer to the question."),
 });
 
-export const GenerateChapterFullPackageOutputSchema = z.object({
+const GenerateChapterFullPackageOutputSchema = z.object({
   summary: z.string().describe("A comprehensive yet concise summary of the entire chapter."),
   notes: z.string().describe("Detailed, high-quality, well-structured notes for the chapter, formatted using markdown for clarity (headings, bold, bullet points)."),
   pyqs: z.array(PYQSchema).describe("A list of 5-10 highly targeted Previous Year Questions (PYQs) relevant to the chapter, board, and class, complete with detailed answers."),

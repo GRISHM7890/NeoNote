@@ -34,4 +34,5 @@ import '@/ai/flows/ai-concept-quiz-generator.ts';
 import '@/ai/flows/ai-smart-tip-generator.ts';
 import '@/ai/flows/ai-bilingual-flashcard-generator.ts';
 import '@/ai/flows/ai-sticker-generator.ts';
+import '@/ai/flows/ai-chapter-full-generator.ts';
 

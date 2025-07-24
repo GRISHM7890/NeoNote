@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle } from 'lucide-react';
+import { Library, Trash2, FileText, BrainCircuit, Shield, BookCopy, Zap, Calculator, FolderKanban, Network, Swords, BellRing, FlaskConical, BookOpen, BookMarked, BrainCog, TrendingUp, Leaf, Languages, Puzzle, Sticker, HelpCircle, Music, Youtube } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -32,6 +32,8 @@ import type { GenerateBilingualFlashcardsOutput } from '@/ai/flows/ai-bilingual-
 import type { GenerateConceptQuizOutput } from '@/ai/flows/ai-concept-quiz-generator';
 import type { GenerateStickersOutput } from '@/ai/flows/ai-sticker-generator';
 import Image from 'next/image';
+import type { RecommendMusicOutput } from '@/ai/flows/ai-music-recommender';
+import Link from 'next/link';
 
 // Define a union type for all possible library item payloads
 type LibraryItemPayload =
@@ -50,6 +52,7 @@ type LibraryItemPayload =
   | { input: any; result: GenerateBilingualFlashcardsOutput }
   | { input: any; result: GenerateConceptQuizOutput }
   | { input: any; result: GenerateStickersOutput }
+  | { input: any; result: RecommendMusicOutput }
   | any;
 
 export type LibraryItem = {
@@ -233,6 +236,29 @@ const StickerPackDisplay = ({ payload }: { payload: {result: GenerateStickersOut
     </div>
 );
 
+const MusicRecommendationsDisplay = ({ payload }: { payload: { result: RecommendMusicOutput }}) => (
+    <div className="space-y-4">
+        {payload.result.recommendations.map((rec, index) => {
+            const youtubeLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(rec.youtubeSearchQuery)}`;
+            return (
+                <Card key={index} className="bg-background/50">
+                    <CardHeader>
+                        <CardTitle>{rec.title}</CardTitle>
+                        <CardDescription>{rec.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                         <Button asChild className="w-full">
+                            <Link href={youtubeLink} target="_blank" rel="noopener noreferrer">
+                                <Youtube className="mr-2" /> Find on YouTube
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
+            );
+        })}
+    </div>
+);
+
 
 const DefaultDisplay = ({ payload }: { payload: any }) => (
     <pre className="whitespace-pre-wrap text-sm bg-background/50 p-4 rounded-md overflow-x-auto">
@@ -261,6 +287,8 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
           return <ConceptQuizDisplay payload={item.payload} />;
       case 'Sticker Pack':
           return <StickerPackDisplay payload={item.payload} />;
+      case 'Music Recommendations':
+          return <MusicRecommendationsDisplay payload={item.payload} />;
       // Add more cases here for other types as they are created
       default:
         return <DefaultDisplay payload={item.payload} />;
@@ -287,6 +315,7 @@ const LibraryItemDisplay = ({ item }: { item: LibraryItem }) => {
     'Bilingual Flashcards': Languages,
     'Concept Quiz': HelpCircle,
     'Sticker Pack': Sticker,
+    'Music Recommendations': Music,
   }[item.type] || Library;
 
 

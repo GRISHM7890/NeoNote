@@ -15,59 +15,72 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
 // 1. Define Input/Output Schemas
+export type GenerateChapterFullPackageInput = z.infer<typeof GenerateChapterFullPackageInputSchema>;
 const GenerateChapterFullPackageInputSchema = z.object({
   chapterName: z.string().describe("The name of the chapter."),
   className: z.string().describe("The class or grade level (e.g., 'Class 10')."),
   subject: z.string().describe("The academic subject (e.g., 'Physics', 'History')."),
   board: z.string().describe("The educational board (e.g., 'CBSE', 'ICSE', 'Maharashtra State Board')."),
 });
-export type GenerateChapterFullPackageInput = z.infer<typeof GenerateChapterFullPackageInputSchema>;
 
 const PYQSchema = z.object({
     question: z.string().describe("The previous year question."),
     answer: z.string().describe("A detailed, correct answer to the question."),
 });
 
+export type GenerateChapterFullPackageOutput = z.infer<typeof GenerateChapterFullPackageOutputSchema>;
 const GenerateChapterFullPackageOutputSchema = z.object({
   summary: z.string().describe("A comprehensive yet concise summary of the entire chapter."),
   notes: z.string().describe("Detailed, high-quality, well-structured notes for the chapter, formatted using markdown for clarity (headings, bold, bullet points)."),
   pyqs: z.array(PYQSchema).describe("A list of 5-10 highly targeted Previous Year Questions (PYQs) relevant to the chapter, board, and class, complete with detailed answers."),
 });
-export type GenerateChapterFullPackageOutput = z.infer<typeof GenerateChapterFullPackageOutputSchema>;
 
-// 2. Define the AI prompt
-const generateChapterPackagePrompt = ai.definePrompt({
-  name: 'generateChapterPackagePrompt',
+// 2. Define specialized AI prompts for each part of the package
+
+const summaryPrompt = ai.definePrompt({
+  name: 'generateChapterSummaryPrompt',
   input: { schema: GenerateChapterFullPackageInputSchema },
-  output: { schema: GenerateChapterFullPackageOutputSchema },
-  prompt: `You are a master educator AI for the Indian education system. Your task is to generate a complete, high-quality study package for a student based on the details they provide.
+  output: { schema: z.object({ summary: GenerateChapterFullPackageOutputSchema.shape.summary }) },
+  prompt: `You are a master educator AI. Generate a comprehensive yet concise summary for the following chapter:
 
-**Student's Requirements:**
 - **Board:** {{{board}}}
 - **Class:** {{{className}}}
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
 
-**Your Task (Follow these steps precisely):**
-
-1.  **Generate a Chapter Summary:**
-    *   Create a comprehensive summary of the "{{{chapterName}}}" chapter. It should cover all the main concepts and be easy to understand.
-
-2.  **Generate High-Quality Notes:**
-    *   Create detailed, well-structured notes for the chapter.
-    *   Use Markdown for formatting: use headings, subheadings, bold keywords, and bullet points to make the notes easy to read and revise.
-    *   The notes should be thorough enough for exam preparation.
-
-3.  **Generate Targeted Previous Year Questions (PYQs):**
-    *   Based on the specified **Board**, **Class**, and **Chapter**, generate a list of 5 to 10 highly relevant Previous Year Questions (PYQs).
-    *   These questions should be ones that have frequently appeared in past exams or are of high importance.
-    *   For **EACH** question, you **MUST** provide a detailed, accurate answer.
-
-Return the entire study package in the specified JSON format.
-`,
+Focus on covering all the main concepts in an easy-to-understand manner.`,
 });
 
-// 3. Define the main flow
+const notesPrompt = ai.definePrompt({
+  name: 'generateChapterNotesPrompt',
+  input: { schema: GenerateChapterFullPackageInputSchema },
+  output: { schema: z.object({ notes: GenerateChapterFullPackageOutputSchema.shape.notes }) },
+  prompt: `You are a master educator AI. Create detailed, well-structured, high-quality notes for the following chapter:
+
+- **Board:** {{{board}}}
+- **Class:** {{{className}}}
+- **Subject:** {{{subject}}}
+- **Chapter:** {{{chapterName}}}
+
+Use Markdown for formatting: use headings, subheadings, bold keywords, and bullet points to make the notes easy to read and revise. The notes must be thorough enough for exam preparation.`,
+});
+
+const pyqsPrompt = ai.definePrompt({
+  name: 'generateChapterPyqsPrompt',
+  input: { schema: GenerateChapterFullPackageInputSchema },
+  output: { schema: z.object({ pyqs: GenerateChapterFullPackageOutputSchema.shape.pyqs }) },
+  prompt: `You are a master exam creator AI for the Indian education system. Generate a list of 5 to 10 highly relevant Previous Year Questions (PYQs) for the following chapter:
+
+- **Board:** {{{board}}}
+- **Class:** {{{className}}}
+- **Subject:** {{{subject}}}
+- **Chapter:** {{{chapterName}}}
+
+These questions should be ones that have frequently appeared in past exams or are of high importance. For EACH question, you MUST provide a detailed, accurate answer.`,
+});
+
+
+// 3. Define the main flow to orchestrate the parallel calls
 const generateChapterFullPackageFlow = ai.defineFlow(
   {
     name: 'generateChapterFullPackageFlow',
@@ -75,11 +88,22 @@ const generateChapterFullPackageFlow = ai.defineFlow(
     outputSchema: GenerateChapterFullPackageOutputSchema,
   },
   async (input) => {
-    const { output } = await generateChapterPackagePrompt(input);
-    if (!output) {
-      throw new Error('The AI failed to generate the study package. Please try again.');
+    // Run all three generation prompts in parallel for efficiency
+    const [summaryResult, notesResult, pyqsResult] = await Promise.all([
+      summaryPrompt(input),
+      notesPrompt(input),
+      pyqsPrompt(input),
+    ]);
+    
+    const summary = summaryResult.output?.summary;
+    const notes = notesResult.output?.notes;
+    const pyqs = pyqsResult.output?.pyqs;
+
+    if (!summary || !notes || !pyqs) {
+      throw new Error('The AI failed to generate one or more parts of the study package. Please try again.');
     }
-    return output;
+
+    return { summary, notes, pyqs };
   }
 );
 

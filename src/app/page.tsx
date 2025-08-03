@@ -2,7 +2,7 @@
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf, Music, Printer, Video, Puzzle, MessageSquare, View, Star, Smile, Sticker, BookText, GitGraph, QrCode } from 'lucide-react';
+import { ArrowRight, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, FilePenLine, Leaf, Music, Printer, Video, Puzzle, MessageSquare, View, Star, Smile, Sticker, BookText, GitGraph, QrCode, AudioLines } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -40,6 +40,7 @@ const features = [
     { href: '/tools/chapter-full-ai', label: 'Chapter Full AI', icon: BookText, description: 'Get a summary, notes, and PYQs for any chapter.' },
     { href: '/tools/diagram-generator', label: 'Any Subject Diagram Generator', icon: GitGraph, description: 'Generate a diagram for any topic.' },
     { href: '/tools/qr-generator', label: 'QR Code Note Sharer', icon: QrCode, description: 'Share notes as a downloadable PDF via QR code.' },
+    { href: '/tools/text-to-speech', label: 'Text to Speech (Read Aloud)', icon: AudioLines, description: 'Convert any text into high-quality spoken audio.' },
 ];
 
 export default function DashboardPage() {

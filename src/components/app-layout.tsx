@@ -2,7 +2,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile, Sticker, BookText, GitGraph, QrCode, AudioLines } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile, Sticker, BookText, GitGraph, QrCode, AudioLines, Folder } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -124,6 +124,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
   ];
 
   const isToolsPath = pathname.startsWith('/tools');
+  const isSubjectsPath = pathname.startsWith('/subjects');
 
   return (
     <SidebarProvider>
@@ -151,6 +152,39 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              
+              <SidebarMenuItem asChild>
+                <Collapsible defaultOpen={isSubjectsPath}>
+                  <CollapsibleTrigger asChild>
+                     <SidebarMenuButton className="w-full justify-between">
+                        <div className='flex items-center gap-2'>
+                           <Folder className="size-4" />
+                           <span>My Subjects</span>
+                        </div>
+                        <ChevronDown className="size-4 shrink-0 transition-transform duration-200 [&[data-state=open]]:-rotate-180" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent asChild>
+                    <SidebarMenuSub>
+                        <SidebarMenuSubItem>
+                            <SidebarMenuSubButton asChild isActive={pathname === '/subjects/physics'}>
+                                <Link href="#"><span>Physics</span></Link>
+                            </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                        <SidebarMenuSubItem>
+                            <SidebarMenuSubButton asChild isActive={pathname === '/subjects/chemistry'}>
+                                <Link href="#"><span>Chemistry</span></Link>
+                            </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                         <SidebarMenuSubItem>
+                            <SidebarMenuSubButton asChild isActive={pathname === '/subjects/biology'}>
+                                <Link href="#"><span>Biology</span></Link>
+                            </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </Collapsible>
+              </SidebarMenuItem>
 
               <SidebarMenuItem asChild>
                 <Collapsible defaultOpen={isToolsPath}>
@@ -164,7 +198,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent asChild>
-                    <SidebarMenuSub className="max-h-[calc(100vh-250px)] overflow-y-auto">
+                    <SidebarMenuSub className="max-h-[calc(100vh-350px)] overflow-y-auto">
                       {calculators.sort((a,b) => a.label.localeCompare(b.label)).map((item) => (
                          <SidebarMenuSubItem key={item.href}>
                             <SidebarMenuSubButton asChild isActive={pathname === item.href}>

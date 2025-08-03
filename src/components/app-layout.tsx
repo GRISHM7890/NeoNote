@@ -2,7 +2,7 @@
 'use client';
 
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarGroup, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile, Sticker, BookText, GitGraph, QrCode, AudioLines, Folder } from 'lucide-react';
+import { Home, Notebook, PlusSquare, Settings, BrainCircuit, FileText, FlaskConical, Calendar, BookOpen, Lightbulb, Calculator, Mic, FileQuestion, GraduationCap, Timer, FolderKanban, Network, Bot, Shield, Swords, Languages, BookCopy, Zap, BellRing, BookMarked, BrainCog, TrendingUp, MicVocal, FilePenLine, Leaf, Wind, Video, Library, User, LogOut, Printer, Music, Puzzle, Star, View, Smile, Sticker, BookText, GitGraph, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from './icons';
@@ -120,7 +120,6 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
     { href: '/tools/chapter-full-ai', label: 'Chapter Full AI', icon: BookText },
     { href: '/tools/diagram-generator', label: 'Any Subject Diagram Generator', icon: GitGraph },
     { href: '/tools/qr-generator', label: 'QR Code Note Sharer', icon: QrCode },
-    { href: '/tools/text-to-speech', label: 'Text to Speech', icon: AudioLines },
   ];
 
   const isToolsPath = pathname.startsWith('/tools');
@@ -158,7 +157,7 @@ export default function AppLayout({ children, inChat, onLeaveChat }: AppLayoutPr
                   <CollapsibleTrigger asChild>
                      <SidebarMenuButton className="w-full justify-between">
                         <div className='flex items-center gap-2'>
-                           <Folder className="size-4" />
+                           <FolderKanban className="size-4" />
                            <span>My Subjects</span>
                         </div>
                         <ChevronDown className="size-4 shrink-0 transition-transform duration-200 [&[data-state=open]]:-rotate-180" />

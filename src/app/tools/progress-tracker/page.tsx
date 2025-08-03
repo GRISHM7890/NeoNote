@@ -14,11 +14,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { format } from 'date-fns';
 import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { simulateRank, type SimulateRankInput, type SimulateRankOutput } from '@/ai/flows/ai-rank-simulator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+type ExamType = 'Board Exams' | 'NEET' | 'JEE Main' | 'JEE Advanced';
 
 type MockTest = {
   id: string;
   testName: string;
   subject: string;
+  examType: ExamType;
   score: number;
   totalMarks: number;
   percentage: number;
@@ -27,16 +31,22 @@ type MockTest = {
   isAnalyzing?: boolean;
 };
 
+const subjects = ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'History', 'Geography'];
+const examTypes: ExamType[] = ['Board Exams', 'NEET', 'JEE Main', 'JEE Advanced'];
+
+
 const AddTestDialog = ({ onTestAdded }: { onTestAdded: (test: MockTest) => void }) => {
+    const { toast } = useToast();
     const [open, setOpen] = useState(false);
     const [testName, setTestName] = useState('');
     const [subject, setSubject] = useState('');
+    const [examType, setExamType] = useState<ExamType | ''>('');
     const [score, setScore] = useState<number | ''>('');
     const [totalMarks, setTotalMarks] = useState<number | ''>(100);
 
     const handleAddTest = () => {
-        if (!testName || !subject || score === '' || totalMarks === '' || +score > +totalMarks) {
-            alert('Please fill all fields correctly.');
+        if (!testName || !subject || !examType || score === '' || totalMarks === '' || +score > +totalMarks) {
+            toast({title: 'Missing or Invalid Fields', description: 'Please fill all fields correctly.', variant: 'destructive'});
             return;
         }
         
@@ -44,6 +54,7 @@ const AddTestDialog = ({ onTestAdded }: { onTestAdded: (test: MockTest) => void 
             id: Date.now().toString(),
             testName,
             subject,
+            examType,
             score: +score,
             totalMarks: +totalMarks,
             percentage: (+score / +totalMarks) * 100,
@@ -55,6 +66,7 @@ const AddTestDialog = ({ onTestAdded }: { onTestAdded: (test: MockTest) => void 
         // Reset form
         setTestName('');
         setSubject('');
+        setExamType('');
         setScore('');
         setTotalMarks(100);
     };
@@ -69,25 +81,37 @@ const AddTestDialog = ({ onTestAdded }: { onTestAdded: (test: MockTest) => void 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Add New Mock Test Score</DialogTitle>
-                    <DialogDescription>Enter the details of your completed mock test.</DialogDescription>
+                    <DialogDescription>Enter the details of your completed mock test for an accurate AI analysis.</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="testName">Test Name</Label>
-                        <Input id="testName" value={testName} onChange={(e) => setTestName(e.target.value)} placeholder="e.g., Weekly Physics Test" />
+                     <div className="space-y-2">
+                        <Label htmlFor="examType">Exam Type</Label>
+                        <Select value={examType} onValueChange={(v) => setExamType(v as ExamType)}>
+                            <SelectTrigger id="examType"><SelectValue placeholder="Select Exam Type"/></SelectTrigger>
+                            <SelectContent>{examTypes.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}</SelectContent>
+                        </Select>
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="subject">Subject</Label>
-                        <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="e.g., Physics" />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="testName">Test Name</Label>
+                            <Input id="testName" value={testName} onChange={(e) => setTestName(e.target.value)} placeholder="e.g., Weekly Physics Test" />
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="subject">Subject</Label>
+                            <Select value={subject} onValueChange={setSubject}>
+                                <SelectTrigger id="subject"><SelectValue placeholder="Select Subject"/></SelectTrigger>
+                                <SelectContent>{subjects.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                            </Select>
+                        </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                          <div className="space-y-2">
-                            <Label htmlFor="score">Score</Label>
-                            <Input id="score" type="number" value={score} onChange={(e) => setScore(+e.target.value)} />
+                            <Label htmlFor="score">Your Score</Label>
+                            <Input id="score" type="number" value={score} onChange={(e) => setScore(e.target.value === '' ? '' : +e.target.value)} />
                         </div>
                          <div className="space-y-2">
                             <Label htmlFor="totalMarks">Total Marks</Label>
-                            <Input id="totalMarks" type="number" value={totalMarks} onChange={(e) => setTotalMarks(+e.target.value)} />
+                            <Input id="totalMarks" type="number" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value === '' ? '' : +e.target.value)} />
                         </div>
                     </div>
                 </div>
@@ -118,7 +142,7 @@ export default function ProgressTrackerPage() {
     const input: SimulateRankInput = {
         subject: test.subject,
         scorePercentage: test.percentage,
-        examType: "Board Exams" // Defaulting for now, can be an input later
+        examType: test.examType
     };
 
     try {
@@ -149,7 +173,7 @@ export default function ProgressTrackerPage() {
     return acc;
   }, [] as {name: string, date: Date, [key: string]: any}[]).sort((a,b) => a.date.getTime() - b.date.getTime());
 
-  const subjects = [...new Set(tests.map(t => t.subject))];
+  const subjectsInTests = [...new Set(tests.map(t => t.subject))];
   const subjectColors = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F'];
 
   return (
@@ -186,7 +210,7 @@ export default function ProgressTrackerPage() {
                                     }}
                                 />
                                 <Legend />
-                                {subjects.map((subject, i) => (
+                                {subjectsInTests.map((subject, i) => (
                                     <Line key={subject} type="monotone" dataKey={subject} stroke={subjectColors[i % subjectColors.length]} connectNulls />
                                 ))}
                             </LineChart>
@@ -208,63 +232,67 @@ export default function ProgressTrackerPage() {
                 <CardDescription>A detailed log of all your tests.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Test Name</TableHead>
-                            <TableHead>Subject</TableHead>
-                            <TableHead>Score</TableHead>
-                            <TableHead>Percentage</TableHead>
-                            <TableHead className='text-right'>AI Analysis</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {tests.map(test => (
-                            <React.Fragment key={test.id}>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
                             <TableRow>
-                                <TableCell>{format(test.date, 'd MMM, yyyy')}</TableCell>
-                                <TableCell className='font-medium'>{test.testName}</TableCell>
-                                <TableCell>{test.subject}</TableCell>
-                                <TableCell>{test.score}/{test.totalMarks}</TableCell>
-                                <TableCell className='font-semibold'>{test.percentage.toFixed(1)}%</TableCell>
-                                <TableCell className='text-right'>
-                                    {!test.analysis && (
-                                        <Button 
-                                            size="sm" 
-                                            variant="ghost" 
-                                            onClick={() => handleAnalyzeRank(test.id)}
-                                            disabled={test.isAnalyzing}
-                                        >
-                                            {test.isAnalyzing ? <Loader2 className='animate-spin'/> : <Wand2 className='mr-2'/>}
-                                            Get Rank Analysis
-                                        </Button>
-                                    )}
-                                </TableCell>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Test Name</TableHead>
+                                <TableHead>Exam Type</TableHead>
+                                <TableHead>Subject</TableHead>
+                                <TableHead>Score</TableHead>
+                                <TableHead>Percentage</TableHead>
+                                <TableHead className='text-right'>AI Analysis</TableHead>
                             </TableRow>
-                            {test.analysis && (
+                        </TableHeader>
+                        <TableBody>
+                            {tests.map(test => (
+                                <React.Fragment key={test.id}>
                                 <TableRow>
-                                    <TableCell colSpan={6} className="p-0">
-                                        <div className="bg-background/50 p-4 m-2 rounded-md border space-y-3">
-                                            <div className="flex flex-wrap gap-4 items-center">
-                                                <div className="flex items-center gap-2">
-                                                    <Star className="w-4 h-4 text-accent" />
-                                                    <p><strong>Predicted Rank:</strong> {test.analysis.predictedRankRange}</p>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Percent className="w-4 h-4 text-accent" />
-                                                    <p><strong>Percentile:</strong> {test.analysis.predictedPercentile.toFixed(1)}</p>
-                                                </div>
-                                            </div>
-                                            <p className="text-muted-foreground text-sm">{test.analysis.analysis}</p>
-                                        </div>
+                                    <TableCell>{format(test.date, 'd MMM, yyyy')}</TableCell>
+                                    <TableCell className='font-medium'>{test.testName}</TableCell>
+                                    <TableCell>{test.examType}</TableCell>
+                                    <TableCell>{test.subject}</TableCell>
+                                    <TableCell>{test.score}/{test.totalMarks}</TableCell>
+                                    <TableCell className='font-semibold'>{test.percentage.toFixed(1)}%</TableCell>
+                                    <TableCell className='text-right'>
+                                        {!test.analysis && (
+                                            <Button 
+                                                size="sm" 
+                                                variant="ghost" 
+                                                onClick={() => handleAnalyzeRank(test.id)}
+                                                disabled={test.isAnalyzing}
+                                            >
+                                                {test.isAnalyzing ? <Loader2 className='animate-spin'/> : <Wand2 className='mr-2'/>}
+                                                Get Rank Analysis
+                                            </Button>
+                                        )}
                                     </TableCell>
                                 </TableRow>
-                            )}
-                            </React.Fragment>
-                        ))}
-                    </TableBody>
-                </Table>
+                                {test.analysis && (
+                                    <TableRow>
+                                        <TableCell colSpan={7} className="p-0">
+                                            <div className="bg-background/50 p-4 m-2 rounded-md border space-y-3">
+                                                <div className="flex flex-wrap gap-x-6 gap-y-2 items-center">
+                                                    <div className="flex items-center gap-2">
+                                                        <Star className="w-4 h-4 text-accent" />
+                                                        <p><strong>Predicted Rank:</strong> {test.analysis.predictedRankRange}</p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Percent className="w-4 h-4 text-accent" />
+                                                        <p><strong>Percentile:</strong> {test.analysis.predictedPercentile.toFixed(1)}%</p>
+                                                    </div>
+                                                </div>
+                                                <p className="text-muted-foreground text-sm">{test.analysis.analysis}</p>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                </React.Fragment>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </CardContent>
         </Card>
       </div>

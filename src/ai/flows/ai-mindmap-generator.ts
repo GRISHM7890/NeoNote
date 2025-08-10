@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview AI-powered mindmap generation flow.
@@ -43,21 +42,21 @@ const prompt = ai.definePrompt({
   name: 'generateMindmapPrompt',
   input: { schema: GenerateMindmapInputSchema },
   output: { schema: GenerateMindmapOutputSchema },
-  prompt: `You are an expert at creating visual aids and structured summaries. Your task is to convert the following text into a hierarchical mindmap structure.
+  prompt: `You are a world-class AI expert at creating comprehensive, hierarchical mindmaps from text. Your task is to transform the following unstructured text into a detailed, multi-layered mindmap that covers every single concept. The output must be a weapon of clarity for any student.
 
-**Instructions:**
-1.  **Identify the Core Concept:** Read the text and determine the central theme or main topic. This will be the root node of the mindmap.
-2.  **Extract Main Branches:** Identify the key ideas or main sections that branch off from the core concept. These will be the direct children of the root node.
-3.  **Add Sub-branches:** For each main branch, identify supporting details, examples, or sub-topics. These will be the children of the main branch nodes.
-4.  **Keep it Hierarchical:** The structure should be a tree, with a single root, and branches that go deeper into the details.
-5.  **Be Concise:** Node titles should be short and to the point.
+**CRITICAL INSTRUCTIONS:**
+1.  **Identify the Core Concept:** Read the entire text and determine the absolute central theme. This is the **root node** of your mindmap.
+2.  **Extract Main Branches (Level 1):** Identify all the primary topics, major sections, or foundational pillars of the text that branch directly from the root concept. These are the direct children of the root node.
+3.  **Extract Sub-Branches (Level 2):** For each main branch, you MUST break it down further. Identify all supporting details, sub-topics, definitions, key examples, or related concepts. These will be the children of the main branch nodes.
+4.  **Extract Deeper Sub-Branches (Level 3+):** Do not stop at Level 2. If a sub-branch can be broken down even further (e.g., a process with multiple steps, a concept with different types), you must create another level of children. Be exhaustive. The goal is to create a deeply nested, rich, and prosperous structure.
+5.  **Be Concise and Hierarchical:** Node titles should be short and to the point. The final structure MUST be a perfect tree with a single root.
 
 **Source Text:**
 ---
 {{{text}}}
 ---
 
-Return the result in the specified JSON format, starting with the root node.
+Return the result as a single JSON object, starting with the root node. Do not produce anything else. The mindmap must be as detailed and structured as the "Chemical Bonding" example from NotebookLM. Forge this knowledge into a weapon.
 `,
 });
 

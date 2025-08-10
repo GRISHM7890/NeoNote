@@ -1,22 +1,66 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, type ChangeEvent } from 'react';
 import AppLayout from '@/components/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Network, Loader2, Sparkles, Wand2 } from 'lucide-react';
+import { Network, Loader2, Sparkles, Wand2, UploadCloud } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateMindmap, type MindmapNode } from '@/ai/flows/ai-mindmap-generator';
+import { imageToText } from '@/ai/flows/image-to-text';
 import { Textarea } from '@/components/ui/textarea';
 import { MindmapDisplay } from '@/components/mindmap';
 import { saveLibraryItem } from '@/lib/library';
+import Image from 'next/image';
 
 export default function MindmapGeneratorPage() {
   const { toast } = useToast();
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
   const [mindmapData, setMindmapData] = useState<MindmapNode | null>(null);
+
+  const [imageData, setImageData] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setImagePreview(URL.createObjectURL(file));
+        setImageData(dataUrl);
+        setInputText('');
+        setMindmapData(null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleExtractText = async () => {
+    if (!imageData) return;
+    setIsExtracting(true);
+    try {
+      const result = await imageToText({ photoDataUri: imageData });
+      setInputText(result.extractedText);
+      toast({
+        title: 'Text Extracted!',
+        description: 'Text from the image has been placed in the input field.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Extraction Failed',
+        description: 'Could not extract text from the image.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleGenerateMindmap = async () => {
     if (!inputText) {
@@ -68,17 +112,40 @@ export default function MindmapGeneratorPage() {
         <Card className="bg-secondary/30">
           <CardHeader>
             <CardTitle>1. Provide Your Notes</CardTitle>
-            <CardDescription>Paste the text content you want to visualize as a mindmap.</CardDescription>
+            <CardDescription>Upload an image or paste the text content you want to visualize.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
+            <Button onClick={() => fileInputRef.current?.click()} variant="outline" className="w-full">
+              <UploadCloud className="mr-2" /> {imagePreview ? "Change Image" : "Upload Image"}
+            </Button>
+
+            {imagePreview && (
+              <div className='space-y-2'>
+                <div className="relative w-full h-48 rounded-lg overflow-hidden border">
+                  <Image src={imagePreview} alt="Uploaded preview" layout="fill" objectFit="contain" />
+                </div>
+                <Button onClick={handleExtractText} disabled={isExtracting || !imageData} className="w-full">
+                  {isExtracting ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
+                  Extract Text from Image
+                </Button>
+              </div>
+            )}
+            
             <Textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              rows={10}
-              placeholder="Paste your chapter notes, summary, or any text here..."
+              rows={8}
+              placeholder="Paste your chapter notes here, or extract text from an image above..."
               className="text-base bg-card"
             />
-            <Button onClick={handleGenerateMindmap} disabled={isLoading} className="w-full text-lg py-6 shadow-glow hover:shadow-glow-sm transition-shadow">
+            <Button onClick={handleGenerateMindmap} disabled={isLoading || !inputText} className="w-full text-lg py-6 shadow-glow hover:shadow-glow-sm transition-shadow">
               {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
               Generate Mindmap
             </Button>

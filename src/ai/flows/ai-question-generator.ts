@@ -17,6 +17,7 @@ export type GenerateQuestionsInput = z.infer<typeof GenerateQuestionsInputSchema
 const GenerateQuestionsInputSchema = z.object({
   subject: z.string().describe('The subject for which to generate questions (e.g., "Biology").'),
   topic: z.string().describe('The specific topic within the subject (e.g., "Photosynthesis").'),
+  className: z.string().optional().describe("The student's class or grade level (e.g., 'Class 10')."),
   counts: z.object({
     mcq: z.number().int().optional().describe('Number of Multiple Choice Questions to generate.'),
     short: z.number().int().optional().describe('Number of Short Answer Questions to generate.'),
@@ -71,10 +72,11 @@ const prompt = ai.definePrompt({
   name: 'generateQuestionsPrompt',
   input: { schema: GenerateQuestionsInputSchema },
   output: { schema: GenerateQuestionsOutputSchema },
-  prompt: `You are an expert educator and exam creator. Your task is to create a high-quality, practical question bank based on the user's specifications. The questions should be useful for students of any age group, from Class 1 upwards.
+  prompt: `You are an expert educator and exam creator. Your task is to create a high-quality, practical question bank based on the user's specifications.
 
 **Subject:** {{subject}}
 **Topic:** {{topic}}
+{{#if className}}**Class Level:** {{className}}{{/if}}
 
 **CRITICAL INSTRUCTIONS:**
 1.  You **MUST** generate questions for **ALL** types where a count greater than 0 is specified. There are no exceptions.
@@ -94,8 +96,8 @@ const prompt = ai.definePrompt({
 {{#if counts.true_or_false}}
 -   Generate **{{counts.true_or_false}}** True/False Questions. For each: Provide a statement, indicate if it's true or false, and give a brief explanation.
 {{/if}}
-3.  The questions must be highly relevant to the provided subject and topic, and be practical for real exam preparation.
-4.  The difficulty level should be appropriate for the topic.
+3.  The questions must be highly relevant to the provided subject and topic.
+4.  The difficulty level **MUST** be appropriate for the specified **Class Level**. If no class is specified, assume a general high school level.
 5.  Return the result in the specified JSON format. If a question type was not requested (count is 0 or not provided), do not include its key in the final JSON output.
 `,
 });

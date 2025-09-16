@@ -19,6 +19,7 @@ import { saveLibraryItem } from '@/lib/library';
 import { cn } from '@/lib/utils';
 
 const subjects = ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'History', 'Geography', 'Civics', 'Economics', 'English', 'Computer Science'];
+const classLevels = ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12'];
 
 type QuestionType = 'mcq' | 'short' | 'long' | 'fill_in_the_blanks' | 'true_or_false';
 
@@ -33,6 +34,7 @@ const questionTypeConfig: Record<QuestionType, { label: string, icon: React.Elem
 export default function QuestionBankPage() {
   const { toast } = useToast();
   const [subject, setSubject] = useState('');
+  const [className, setClassName] = useState('');
   const [topic, setTopic] = useState('');
   const [questionCounts, setQuestionCounts] = useState<Record<QuestionType, number>>({
     mcq: 5,
@@ -62,6 +64,7 @@ export default function QuestionBankPage() {
     const input: GenerateQuestionsInput = { 
         subject, 
         topic,
+        className: className || undefined,
         counts: {
             mcq: questionCounts.mcq > 0 ? questionCounts.mcq : undefined,
             short: questionCounts.short > 0 ? questionCounts.short : undefined,
@@ -112,7 +115,7 @@ export default function QuestionBankPage() {
             <CardDescription>Select a subject, topic, and the types of questions you want.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-             <div className="grid md:grid-cols-2 gap-4">
+             <div className="grid md:grid-cols-3 gap-4">
                 <Select value={subject} onValueChange={setSubject}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a Subject" />
@@ -123,10 +126,20 @@ export default function QuestionBankPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                 <Select value={className} onValueChange={setClassName}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Class (Optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {classLevels.map((c) => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Input
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g., Photosynthesis, The Mughal Empire"
+                  placeholder="e.g., Photosynthesis"
                 />
              </div>
              <div className="space-y-4">

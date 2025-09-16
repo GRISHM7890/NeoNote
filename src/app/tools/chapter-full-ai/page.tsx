@@ -15,8 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const boards = ['CBSE', 'ICSE', 'Maharashtra State Board', 'Other'];
-const classLevels = ['Class 9', 'Class 10', 'Class 11', 'Class 12'];
-const subjects = ['Physics', 'Mathematics', 'Chemistry', 'Biology', 'History', 'Geography', 'Civics', 'Economics', 'English', 'Computer Science'];
+const classLevels = ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12'];
 
 export default function ChapterFullAiPage() {
   const { toast } = useToast();
@@ -77,10 +76,7 @@ export default function ChapterFullAiPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
-               <Select value={subject} onValueChange={setSubject}>
-                <SelectTrigger><SelectValue placeholder="Select Subject" /></SelectTrigger>
-                <SelectContent>{subjects.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-              </Select>
+              <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Enter Subject (e.g., Physics)" />
               <Input value={chapterName} onChange={(e) => setChapterName(e.target.value)} placeholder="Chapter Name (e.g., Light - Reflection)" />
             </div>
             <div className="grid md:grid-cols-2 gap-4">

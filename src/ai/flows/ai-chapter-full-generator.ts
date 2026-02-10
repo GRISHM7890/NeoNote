@@ -1,113 +1,69 @@
 
 'use server';
-/**
- * @fileOverview AI flow to generate a complete study package for a given chapter.
- *
- * This flow generates a summary, detailed notes, and previous year questions (PYQs)
- * based on the chapter name, class, subject, and educational board.
- *
- * - generateChapterFullPackage - The main function to orchestrate the generation.
- * - GenerateChapterFullPackageInput - The input type for the flow.
- * - GenerateChapterFullPackageOutput - The return type for the flow.
- */
 
-import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { model } from '@/ai/bytez';
+import { z } from 'zod';
 
 // 1. Define Input/Output Schemas
 export type GenerateChapterFullPackageInput = z.infer<typeof GenerateChapterFullPackageInputSchema>;
 const GenerateChapterFullPackageInputSchema = z.object({
-  chapterName: z.string().describe("The name of the chapter."),
-  className: z.string().describe("The class or grade level (e.g., 'Class 10')."),
-  subject: z.string().describe("The academic subject (e.g., 'Physics', 'History')."),
-  board: z.string().describe("The educational board (e.g., 'CBSE', 'ICSE', 'Maharashtra State Board')."),
+  chapterName: z.string(),
+  className: z.string(),
+  subject: z.string(),
+  board: z.string(),
 });
 
 const PYQSchema = z.object({
-  question: z.string().describe("The previous year question."),
-  answer: z.string().describe("A detailed, correct answer to the question."),
+  question: z.string(),
+  answer: z.string(),
 });
 
 export type GenerateChapterFullPackageOutput = z.infer<typeof GenerateChapterFullPackageOutputSchema>;
 const GenerateChapterFullPackageOutputSchema = z.object({
-  summary: z.string().describe("A comprehensive yet concise summary of the entire chapter."),
-  notes: z.string().describe("Detailed, high-quality, well-structured notes for the chapter, formatted using markdown for clarity (headings, bold, bullet points)."),
-  pyqs: z.array(PYQSchema).describe("A list of at least 50 highly targeted Previous Year Questions (PYQs) relevant to the chapter, board, and class, complete with detailed answers."),
+  summary: z.string(),
+  notes: z.string(),
+  pyqs: z.array(PYQSchema),
 });
 
-// 2. Define specialized AI prompts for each part of the package
-
-const summaryPrompt = ai.definePrompt({
-  name: 'generateChapterSummaryPrompt',
-  input: { schema: GenerateChapterFullPackageInputSchema },
-  output: { schema: z.object({ summary: GenerateChapterFullPackageOutputSchema.shape.summary }) },
-  prompt: `You are a master educator AI. Your task is to generate a comprehensive and exhaustive summary for the following chapter. Focus on quality and coverage of all key concepts, sub-topics, definitions, and important examples.
-    
-- **Board:** {{{board}}}
-- **Class:** {{{className}}}
-- **Subject:** {{{subject}}}
-- **Chapter:** {{{chapterName}}}
-    
-Use markdown for clear formatting (headings, bold, bullet points). Ensure the summary is thorough enough for student preparation.`,
-});
-
-const notesPrompt = ai.definePrompt({
-  name: 'generateChapterNotesPrompt',
-  input: { schema: GenerateChapterFullPackageInputSchema },
-  output: { schema: z.object({ notes: GenerateChapterFullPackageOutputSchema.shape.notes }) },
-  prompt: `You are a master educator AI. Create detailed, well-structured, high-quality notes for the following chapter:
-
-- **Board:** {{{board}}}
-- **Class:** {{{className}}}
-- **Subject:** {{{subject}}}
-- **Chapter:** {{{chapterName}}}
-
-Use Markdown for formatting: use headings, subheadings, bold keywords, bullet points, and nested lists to make the notes easy to read and revise. The notes must be thorough enough for exam preparation.`,
-});
-
-const pyqsPrompt = ai.definePrompt({
-  name: 'generateChapterPyqsPrompt',
-  input: { schema: GenerateChapterFullPackageInputSchema },
-  output: { schema: z.object({ pyqs: GenerateChapterFullPackageOutputSchema.shape.pyqs }) },
-  prompt: `You are a master exam creator AI for the Indian education system. Generate a highly targeted list of **at least 10** important Previous Year Questions (PYQs) for the following chapter:
-    
-- **Board:** {{{board}}}
-- **Class:** {{{className}}}
-- **Subject:** {{{subject}}}
-- **Chapter:** {{{chapterName}}}
-    
-For EACH question, you MUST provide a detailed, accurate answer. Select the most frequently appeared or high-importance questions.`,
-});
-
-
-// 3. Define the main flow to orchestrate the parallel calls
-const generateChapterFullPackageFlow = ai.defineFlow(
-  {
-    name: 'generateChapterFullPackageFlow',
-    inputSchema: GenerateChapterFullPackageInputSchema,
-    outputSchema: GenerateChapterFullPackageOutputSchema,
-  },
-  async (input) => {
-    // Run all three generation prompts in parallel for efficiency
-    const [summaryResult, notesResult, pyqsResult] = await Promise.all([
-      summaryPrompt(input),
-      notesPrompt(input),
-      pyqsPrompt(input),
-    ]);
-
-    const summary = summaryResult.output?.summary;
-    const notes = notesResult.output?.notes;
-    const pyqs = pyqsResult.output?.pyqs;
-
-    if (!summary || !notes || !pyqs) {
-      throw new Error('The AI failed to generate one or more parts of the study package. Please try again.');
-    }
-
-    return { summary, notes, pyqs };
-  }
-);
-
-// 4. Export a wrapper function for client-side use
+// 2. Export a wrapper function for client-side use
 export async function generateChapterFullPackage(input: GenerateChapterFullPackageInput): Promise<GenerateChapterFullPackageOutput> {
-  return generateChapterFullPackageFlow(input);
+  const prompt = `
+You are a master educator AI. Your task is to generate a comprehensive study package for the following chapter:
+- **Board:** ${input.board}
+- **Class:** ${input.className}
+- **Subject:** ${input.subject}
+- **Chapter:** ${input.chapterName}
+
+Your response MUST be a valid JSON object with the following structure:
+{
+  "summary": "A comprehensive summary of the chapter.",
+  "notes": "Detailed notes with markdown formatting.",
+  "pyqs": [
+    { "question": "Question 1", "answer": "Answer 1" },
+    ...
+  ]
+}
+
+Ensure you provide at least 15-20 high-quality Previous Year Questions (PYQs).
+Return ONLY the JSON object.
+`;
+
+  const { error, output } = await model.run([{
+    role: "user",
+    content: prompt
+  }]);
+
+  if (error) {
+    throw new Error(`Bytez AI Error: ${JSON.stringify(error)}`);
+  }
+
+  try {
+    // Clean output in case the model wraps it in markdown blocks
+    const cleanOutput = typeof output === 'string' ? output.replace(/```json|```/g, '').trim() : JSON.stringify(output);
+    const result = JSON.parse(cleanOutput);
+    return GenerateChapterFullPackageOutputSchema.parse(result);
+  } catch (e) {
+    console.error("Failed to parse Bytez output:", output);
+    throw new Error('The AI failed to generate a valid study package structure. Please try again.');
+  }
 }

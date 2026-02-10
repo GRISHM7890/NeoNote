@@ -1,85 +1,37 @@
 
 'use server';
-/**
- * @fileOverview AI flow to generate comprehensive notes from a YouTube video URL.
- *
- * This flow takes a YouTube URL and generates a structured set of notes,
- * including a summary, key takeaways, formulas, and timestamped points.
- *
- * - youtubeNotesGenerator - The main function to orchestrate the note generation.
- * - YoutubeNotesGeneratorInput - The input type for the flow.
- * - YoutubeNotesGeneratorOutput - The return type for the flow.
- */
 
-import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
-
-
-export type YoutubeNotesGeneratorInput = z.infer<typeof YoutubeNotesGeneratorInputSchema>;
-const YoutubeNotesGeneratorInputSchema = z.object({
-  videoUrl: z.string().url().describe('The URL of the YouTube video to be processed.'),
-});
+import { runStructuredPrompt } from '@/ai/bytez';
+import { z } from 'zod';
 
 const FormulaSchema = z.object({
-    formula: z.string().describe('The mathematical or scientific formula identified.'),
-    explanation: z.string().describe('A brief explanation of what the formula represents and its variables.'),
+  formula: z.string(),
+  explanation: z.string(),
 });
 
 const TimestampSchema = z.object({
-    time: z.string().describe('The timestamp in MM:SS format.'),
-    description: z.string().describe('A description of the key concept explained at this timestamp.'),
+  time: z.string(),
+  description: z.string(),
 });
 
-export type YoutubeNotesGeneratorOutput = z.infer<typeof YoutubeNotesGeneratorOutputSchema>;
 const YoutubeNotesGeneratorOutputSchema = z.object({
-    title: z.string().describe('The title of the YouTube video.'),
-    summary: z.string().describe('A concise summary of the entire video content.'),
-    keyTakeaways: z.array(z.string()).describe('A list of the most important points or takeaways from the video.'),
-    formulas: z.array(FormulaSchema).optional().describe('An array of key formulas mentioned in the video. Omit if none are found.'),
-    timestamps: z.array(TimestampSchema).describe('An array of important, timestamped revision points.'),
+  title: z.string(),
+  summary: z.string(),
+  keyTakeaways: z.array(z.string()),
+  formulas: z.array(FormulaSchema).optional(),
+  timestamps: z.array(TimestampSchema),
 });
+export type YoutubeNotesGeneratorOutput = z.infer<typeof YoutubeNotesGeneratorOutputSchema>;
 
+export type YoutubeNotesGeneratorInput = {
+  videoUrl: string;
+};
 
-// 2. Define the AI prompt
-const generateNotesPrompt = ai.definePrompt({
-  name: 'generateYoutubeNotesPrompt',
-  input: { schema: YoutubeNotesGeneratorInputSchema },
-  output: { schema: YoutubeNotesGeneratorOutputSchema },
-  model: googleAI.model('gemini-1.5-flash'),
-  prompt: `You are an expert academic note-taker. Your task is to analyze the educational video provided and create a comprehensive set of study notes.
-
-**Video:** {{media url=videoUrl}}
-
-**Instructions:**
-1.  **Analyze the Full Video Content:** Based on the video, generate the following structured notes.
-2.  **Extract the Title:** Identify the main title of the video.
-3.  **Write a Summary:** Create a concise summary (3-4 sentences) that covers the main topics of the video.
-4.  **List Key Takeaways:** Identify and list 5-7 of the most critical points or takeaways.
-5.  **Identify Formulas (If any):** If the video discusses mathematical or scientific formulas, list them along with a brief explanation. If there are no formulas, omit this section.
-6.  **Create Timestamped Notes:** Go through the video and identify at least 5-10 key moments. For each, provide the timestamp (in MM:SS format) and a short description of the important concept being explained. These are for quick revision.
-
-Return the entire output in the specified JSON format.
-`,
-});
-
-// 3. Define the main flow
-const youtubeNotesGeneratorFlow = ai.defineFlow(
-  {
-    name: 'youtubeNotesGeneratorFlow',
-    inputSchema: YoutubeNotesGeneratorInputSchema,
-    outputSchema: YoutubeNotesGeneratorOutputSchema,
-  },
-  async (input) => {
-    const { output } = await generateNotesPrompt(input);
-    if (!output) {
-      throw new Error('The AI failed to generate notes that matched the required format. This video might not be processable.');
-    }
-    return output;
-  }
-);
-
-// 4. Export a wrapper function for client-side use
 export async function youtubeNotesGenerator(input: YoutubeNotesGeneratorInput): Promise<YoutubeNotesGeneratorOutput> {
-  return youtubeNotesGeneratorFlow(input);
+  const prompt = `
+Generate notes for this YouTube video: ${input.videoUrl}
+Analyze the video content and structure it with summary, key takeaways, formulas, and 5-10 timestamps.
+`;
+
+  return runStructuredPrompt(prompt, YoutubeNotesGeneratorOutputSchema);
 }

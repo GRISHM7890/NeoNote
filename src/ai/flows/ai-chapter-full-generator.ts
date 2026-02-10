@@ -24,8 +24,8 @@ const GenerateChapterFullPackageInputSchema = z.object({
 });
 
 const PYQSchema = z.object({
-    question: z.string().describe("The previous year question."),
-    answer: z.string().describe("A detailed, correct answer to the question."),
+  question: z.string().describe("The previous year question."),
+  answer: z.string().describe("A detailed, correct answer to the question."),
 });
 
 export type GenerateChapterFullPackageOutput = z.infer<typeof GenerateChapterFullPackageOutputSchema>;
@@ -41,14 +41,14 @@ const summaryPrompt = ai.definePrompt({
   name: 'generateChapterSummaryPrompt',
   input: { schema: GenerateChapterFullPackageInputSchema },
   output: { schema: z.object({ summary: GenerateChapterFullPackageOutputSchema.shape.summary }) },
-  prompt: `You are a master educator AI. Your task is to generate a profoundly detailed, exhaustive, and comprehensive summary for the following chapter. This summary absolutely must be very long and thorough, equivalent to at least 3 pages of text. You must not leave any concept, sub-topic, definition, key example, or student pain-point behind. Cover everything.
-
+  prompt: `You are a master educator AI. Your task is to generate a comprehensive and exhaustive summary for the following chapter. Focus on quality and coverage of all key concepts, sub-topics, definitions, and important examples.
+    
 - **Board:** {{{board}}}
 - **Class:** {{{className}}}
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
-
-Focus on creating an exhaustive summary that covers every single aspect of the chapter, making it a primary study document. Use markdown for clear formatting.`,
+    
+Use markdown for clear formatting (headings, bold, bullet points). Ensure the summary is thorough enough for student preparation.`,
 });
 
 const notesPrompt = ai.definePrompt({
@@ -69,14 +69,14 @@ const pyqsPrompt = ai.definePrompt({
   name: 'generateChapterPyqsPrompt',
   input: { schema: GenerateChapterFullPackageInputSchema },
   output: { schema: z.object({ pyqs: GenerateChapterFullPackageOutputSchema.shape.pyqs }) },
-  prompt: `You are a master exam creator AI for the Indian education system. Generate a large list of **at least 50** highly relevant Previous Year Questions (PYQs) for the following chapter:
-
+  prompt: `You are a master exam creator AI for the Indian education system. Generate a highly targeted list of **at least 10** important Previous Year Questions (PYQs) for the following chapter:
+    
 - **Board:** {{{board}}}
 - **Class:** {{{className}}}
 - **Subject:** {{{subject}}}
 - **Chapter:** {{{chapterName}}}
-
-These questions should be ones that have frequently appeared in past exams or are of high importance. For EACH question, you MUST provide a detailed, accurate answer. Do not stop until you have provided at least 50 questions and answers.`,
+    
+For EACH question, you MUST provide a detailed, accurate answer. Select the most frequently appeared or high-importance questions.`,
 });
 
 
@@ -94,7 +94,7 @@ const generateChapterFullPackageFlow = ai.defineFlow(
       notesPrompt(input),
       pyqsPrompt(input),
     ]);
-    
+
     const summary = summaryResult.output?.summary;
     const notes = notesResult.output?.notes;
     const pyqs = pyqsResult.output?.pyqs;
